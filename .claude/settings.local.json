@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rojo --version)",
+      "Bash(aftman --version)"
+    ]
+  }
+}
