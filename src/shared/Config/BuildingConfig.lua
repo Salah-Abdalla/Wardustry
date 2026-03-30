@@ -1,0 +1,1313 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ObjectNames = require(ReplicatedStorage.Dictionaries.ObjectNames)
+local Categories = require(ReplicatedStorage.Dictionaries.Categories)
+
+local BuildingConfig = {
+
+	-- ============
+	-- CORE
+	-- ============
+	[ObjectNames["Core Shard"]] = {
+		HP = 1200,
+		Cost = {},
+		BuildTime = 0,
+		Size = { X = 3, Y = 3 },
+		Category = Categories.Core,
+		Icon = 0,
+		Description = "Your base. Stores all resources. Game over if destroyed.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+	[ObjectNames["Core Bastion"]] = {
+		HP = 2400,
+		Cost = {
+			[ObjectNames.Ferrocast] = 1000,
+			[ObjectNames.Silicon] = 800,
+			[ObjectNames.Quartzite] = 600,
+		},
+		BuildTime = 30,
+		Size = { X = 4, Y = 4 },
+		Category = Categories.Core,
+		Icon = 0,
+		Description = "Upgraded Core. Higher storage and extractor aura.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+	[ObjectNames["Core Citadel"]] = {
+		HP = 5500,
+		Cost = {
+			[ObjectNames.Steel] = 3000,
+			[ObjectNames.Quartzite] = 2000,
+			[ObjectNames.Silicon] = 1500,
+			[ObjectNames.Aluminite] = 1000,
+		},
+		BuildTime = 60,
+		Size = { X = 5, Y = 5 },
+		Category = Categories.Core,
+		Icon = 0,
+		Description = "Apex Core. Massive storage, repair field, production aura.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+
+	-- ============
+	-- DRILLS
+	-- ============
+	[ObjectNames["Basic Drill"]] = {
+		HP = 90,
+		Cost = {
+			[ObjectNames.Copper] = 50,
+			[ObjectNames.Ironstone] = 30,
+		},
+		BuildTime = 3,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Drill,
+		Icon = 0,
+		Description = "Starter drill. Mines T1 ores — Copper, Ironstone, Coal.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Pneumatic Drill"]] = {
+		HP = 130,
+		Cost = {
+			[ObjectNames.Copper] = 100,
+			[ObjectNames.Ironstone] = 80,
+			[ObjectNames.Bronze] = 50,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Drill,
+		Icon = 0,
+		Description = "Mines T1-T2 ores including Bauxite and Quartz.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Laser Drill"]] = {
+		HP = 210,
+		Cost = {
+			[ObjectNames.Ferrocast] = 150,
+			[ObjectNames.Silicon] = 100,
+			[ObjectNames.Quartzite] = 80,
+		},
+		BuildTime = 8,
+		Size = { X = 3, Y = 3 },
+		Category = Categories.Drill,
+		Icon = 0,
+		Description = "Mines all ores up to T3 including Crystite. Requires power.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Mega Drill"]] = {
+		HP = 300,
+		Cost = {
+			[ObjectNames.Ferrocast] = 300,
+			[ObjectNames.Quartzite] = 200,
+			[ObjectNames.Silicon] = 150,
+			[ObjectNames.Steel] = 50,
+		},
+		BuildTime = 15,
+		Size = { X = 4, Y = 4 },
+		Category = Categories.Drill,
+		Icon = 0,
+		Description = "Mines all ores including Uranium. Highest throughput. High power draw.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Liquid Extractor"]] = {
+		HP = 110,
+		Cost = {
+			[ObjectNames.Copper] = 80,
+			[ObjectNames.Ironstone] = 60,
+			[ObjectNames.Bronze] = 40,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Drill,
+		Icon = 0,
+		Description = "Extracts liquids from deposit tiles. Outputs to ducts.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+
+	-- ============
+	-- PROCESSING FACTORIES
+	-- ============
+	[ObjectNames["Bronze Smelter"]] = {
+		HP = 85,
+		Cost = {
+			[ObjectNames.Copper] = 60,
+			[ObjectNames.Ironstone] = 40,
+		},
+		BuildTime = 4,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Combines Copper and Tin into Bronze.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Ironstone Forge"]] = {
+		HP = 90,
+		Cost = {
+			[ObjectNames.Copper] = 80,
+			[ObjectNames.Ironstone] = 60,
+			[ObjectNames.Coal] = 40,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Smelts Ironstone and Coal into Ferrocast.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Sand Kiln"]] = {
+		HP = 80,
+		Cost = {
+			[ObjectNames.Copper] = 60,
+			[ObjectNames.Sand] = 40,
+		},
+		BuildTime = 4,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Processes Sand into Glassite.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Bauxite Refinery"]] = {
+		HP = 95,
+		Cost = {
+			[ObjectNames.Ferrocast] = 80,
+			[ObjectNames.Copper] = 60,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Refines Bauxite into Aluminite.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Graphite Press"]] = {
+		HP = 80,
+		Cost = {
+			[ObjectNames.Copper] = 60,
+			[ObjectNames.Coal] = 40,
+		},
+		BuildTime = 4,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Compresses Coal into Graphite.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Silicon Smelter"]] = {
+		HP = 90,
+		Cost = {
+			[ObjectNames.Ferrocast] = 80,
+			[ObjectNames.Sand] = 60,
+			[ObjectNames.Coal] = 40,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Produces Silicon from Coal and Sand.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Quartz Press"]] = {
+		HP = 140,
+		Cost = {
+			[ObjectNames.Ferrocast] = 150,
+			[ObjectNames.Silicon] = 100,
+			[ObjectNames.Quartz] = 80,
+		},
+		BuildTime = 8,
+		Size = { X = 3, Y = 3 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Combines Quartz and Ferrocast into Quartzite.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Steel Manufactuary"]] = {
+		HP = 180,
+		Cost = {
+			[ObjectNames.Ferrocast] = 300,
+			[ObjectNames.Graphite] = 200,
+			[ObjectNames.Silicon] = 150,
+		},
+		BuildTime = 15,
+		Size = { X = 3, Y = 3 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Produces Steel — the endgame structural material.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Crude Vat"]] = {
+		HP = 90,
+		Cost = {
+			[ObjectNames.Ferrocast] = 100,
+			[ObjectNames.Coal] = 80,
+			[ObjectNames.Glassite] = 60,
+		},
+		BuildTime = 6,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Produces Crude liquid from Coal and Coolant.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Uranium Refinery"]] = {
+		HP = 160,
+		Cost = {
+			[ObjectNames.Ferrocast] = 250,
+			[ObjectNames.Quartzite] = 180,
+			[ObjectNames.Silicon] = 120,
+		},
+		BuildTime = 12,
+		Size = { X = 3, Y = 3 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Refines raw Uranium into Refined Uranium for the Nuclear Reactor.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+	[ObjectNames["Coolant Mixer"]] = {
+		HP = 100,
+		Cost = {
+			[ObjectNames.Aluminite] = 120,
+			[ObjectNames.Glassite] = 80,
+			[ObjectNames.Ferrocast] = 60,
+		},
+		BuildTime = 6,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Combines Bauxite and Water into Coolant liquid.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = true,
+	},
+
+	-- ============
+	-- POWER GENERATORS
+	-- ============
+	[ObjectNames["Coal Generator"]] = {
+		HP = 120,
+		Cost = {
+			[ObjectNames.Copper] = 80,
+			[ObjectNames.Ironstone] = 60,
+			[ObjectNames.Coal] = 40,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories["Power Generator"],
+		Icon = 0,
+		Description = "Burns Coal to produce FC power. Starter generator.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Solar Panel"]] = {
+		HP = 80,
+		Cost = {
+			[ObjectNames.Silicon] = 80,
+			[ObjectNames.Glassite] = 60,
+			[ObjectNames.Copper] = 40,
+		},
+		BuildTime = 3,
+		Size = { X = 1, Y = 1 },
+		Category = Categories["Power Generator"],
+		Icon = 0,
+		Description = "Passive power. No fuel. Low individual output.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Geothermal Vent"]] = {
+		HP = 160,
+		Cost = {
+			[ObjectNames.Ferrocast] = 200,
+			[ObjectNames.Silicon] = 150,
+			[ObjectNames.Glassite] = 100,
+		},
+		BuildTime = 10,
+		Size = { X = 2, Y = 2 },
+		Category = Categories["Power Generator"],
+		Icon = 0,
+		Description = "Passive geothermal power. Placed on vent tiles only.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Nuclear Reactor"]] = {
+		HP = 500,
+		Cost = {
+			[ObjectNames.Steel] = 500,
+			[ObjectNames.Quartzite] = 400,
+			[ObjectNames.Silicon] = 300,
+			[ObjectNames.Uranium] = 100,
+		},
+		BuildTime = 30,
+		Size = { X = 3, Y = 3 },
+		Category = Categories["Power Generator"],
+		Icon = 0,
+		Description = "High output reactor. Requires Refined Uranium and Coolant. Explodes if destroyed while fuelled.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Safety Module"]] = {
+		HP = 200,
+		Cost = {
+			[ObjectNames.Steel] = 200,
+			[ObjectNames.Quartzite] = 150,
+			[ObjectNames.Silicon] = 100,
+		},
+		BuildTime = 10,
+		Size = { X = 1, Y = 1 },
+		Category = Categories["Extra Module"],
+		Icon = 0,
+		Description = "Reactor upgrade. Clean shutdown on coolant loss instead of meltdown.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Reinforcement Module"]] = {
+		HP = 300,
+		Cost = {
+			[ObjectNames.Steel] = 300,
+			[ObjectNames.Ferrocast] = 200,
+		},
+		BuildTime = 10,
+		Size = { X = 1, Y = 1 },
+		Category = Categories["Extra Module"],
+		Icon = 0,
+		Description = "Reactor upgrade. Significantly increases reactor HP.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+
+	-- ============
+	-- STEAM GENERATOR
+	-- ============
+	[ObjectNames["Steam Generator"]] = {
+		HP = 140,
+		Cost = {
+			[ObjectNames.Ferrocast] = 80,
+			[ObjectNames.Copper] = 60,
+			[ObjectNames.Glassite] = 40,
+		},
+		BuildTime = 8,
+		Size = { X = 2, Y = 2 },
+		Category = Categories["Power Generator"],
+		Icon = 0,
+		Description = "Burns Coal with Water input for higher output than Coal Generator. Water shortage drops output 50%.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
+		OutputsResources = false,
+		OutputsUnit = false,
+	},
+
+	-- ============
+	-- SMALL BATTERY
+	-- ============
+	[ObjectNames["Small Battery"]] = {
+		HP = 80,
+		Cost = {
+			[ObjectNames.Ferrocast] = 30,
+			[ObjectNames.Silicon] = 20,
+			[ObjectNames.Copper] = 15,
+		},
+		BuildTime = 3,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Battery,
+		Icon = 0,
+		Description = "Stores 200 FC. Charges on surplus, discharges on deficit. Explodes if destroyed at full charge.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
+		OutputsResources = false,
+		OutputsUnit = false,
+	},
+
+	-- ============
+	-- LARGE BATTERY
+	-- ============
+	[ObjectNames["Large Battery"]] = {
+		HP = 200,
+		Cost = {
+			[ObjectNames.Ferrocast] = 80,
+			[ObjectNames.Silicon] = 60,
+			[ObjectNames.Quartzite] = 30,
+		},
+		BuildTime = 8,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Battery,
+		Icon = 0,
+		Description = "Stores 2000 FC. Place near reactors for brownout recovery.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
+		OutputsResources = false,
+		OutputsUnit = false,
+	},
+
+	-- ============
+	-- SMALL POWER NODE
+	-- ============
+	[ObjectNames["Small Power Node"]] = {
+		HP = 60,
+		Cost = {
+			[ObjectNames.Copper] = 20,
+			[ObjectNames.Silicon] = 15,
+		},
+		BuildTime = 2,
+		Size = { X = 1, Y = 1 },
+		Category = Categories["Power Node"],
+		Icon = 0,
+		Description = "Connects generators and consumers within 10 tiles. Max 6 links.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
+		OutputsResources = false,
+		OutputsUnit = false,
+	},
+
+	-- ============
+	-- LARGE POWER NODE
+	-- ============
+	[ObjectNames["Large Power Node"]] = {
+		HP = 120,
+		Cost = {
+			[ObjectNames.Ferrocast] = 50,
+			[ObjectNames.Silicon] = 40,
+			[ObjectNames.Glassite] = 20,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories["Power Node"],
+		Icon = 0,
+		Description = "Connects generators and consumers within 18 tiles. Max 15 links.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
+		OutputsResources = false,
+		OutputsUnit = false,
+	},
+
+	-- ============
+	-- TRANSPORT — CONVEYORS
+	-- ============
+	[ObjectNames["Conveyor"]] = {
+		HP = 40,
+		Cost = { [ObjectNames.Copper] = 10 },
+		BuildTime = 1,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Basic item belt. 5 items/sec.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Express Conveyor"]] = {
+		HP = 60,
+		Cost = {
+			[ObjectNames.Copper] = 20,
+			[ObjectNames.Bronze] = 10,
+		},
+		BuildTime = 1,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Fast item belt. 10 items/sec.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Reinforced Conveyor"]] = {
+		HP = 200,
+		Cost = {
+			[ObjectNames.Ferrocast] = 30,
+			[ObjectNames.Ironstone] = 20,
+		},
+		BuildTime = 2,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Armored belt. High HP, same speed as Express.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Sprint Conveyor"]] = {
+		HP = 40,
+		Cost = {
+			[ObjectNames.Aluminite] = 30,
+			[ObjectNames.Silicon] = 20,
+		},
+		BuildTime = 2,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Fastest belt. Very fragile. 14 items/sec.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Gate Splitter"]] = {
+		HP = 40,
+		Cost = {
+			[ObjectNames.Copper] = 15,
+			[ObjectNames.Tin] = 10,
+		},
+		BuildTime = 1,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Routes overflow to sides when downstream is backed up.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Sieve"]] = {
+		HP = 40,
+		Cost = {
+			[ObjectNames.Copper] = 15,
+			[ObjectNames.Bronze] = 10,
+		},
+		BuildTime = 1,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Filters one item type forward, deflects others sideways.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Crossway"]] = {
+		HP = 40,
+		Cost = {
+			[ObjectNames.Copper] = 10,
+			[ObjectNames.Bronze] = 8,
+		},
+		BuildTime = 1,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Lets two belt lines cross without mixing.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Span Conveyor"]] = {
+		HP = 60,
+		Cost = {
+			[ObjectNames.Ferrocast] = 30,
+			[ObjectNames.Copper] = 20,
+		},
+		BuildTime = 2,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Bridges over other buildings up to 5 tiles.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+
+	-- ============
+	-- TRANSPORT — LIQUID
+	-- ============
+	[ObjectNames["Duct"]] = {
+		HP = 40,
+		Cost = {
+			[ObjectNames.Copper] = 10,
+			[ObjectNames.Tin] = 8,
+		},
+		BuildTime = 1,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Basic liquid transport. 10 units/sec.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Conduit"]] = {
+		HP = 70,
+		Cost = {
+			[ObjectNames.Aluminite] = 20,
+			[ObjectNames.Glassite] = 15,
+		},
+		BuildTime = 2,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "High flow liquid transport. 22 units/sec.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Pipe Bridge"]] = {
+		HP = 60,
+		Cost = {
+			[ObjectNames.Ferrocast] = 25,
+			[ObjectNames.Glassite] = 15,
+		},
+		BuildTime = 2,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Bridges liquid transport over other buildings.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Manifold"]] = {
+		HP = 80,
+		Cost = {
+			[ObjectNames.Ferrocast] = 40,
+			[ObjectNames.Silicon] = 30,
+			[ObjectNames.Aluminite] = 20,
+		},
+		BuildTime = 3,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Smart liquid router. Splits and directs liquid flow.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+
+	-- ============
+	-- TRANSPORT — PAYLOAD
+	-- ============
+	[ObjectNames["Haul Sled"]] = {
+		HP = 90,
+		Cost = {
+			[ObjectNames.Ferrocast] = 80,
+			[ObjectNames.Silicon] = 60,
+			[ObjectNames.Graphite] = 40,
+		},
+		BuildTime = 5,
+		Size = { X = 3, Y = 1 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Transports large payload objects including assembled units.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		AcceptsUnitInput = true,
+		OutputsResources = true,
+		OutputsUnit = false,
+	},
+	[ObjectNames["Haul Router"]] = {
+		HP = 110,
+		Cost = {
+			[ObjectNames.Ferrocast] = 100,
+			[ObjectNames.Silicon] = 80,
+			[ObjectNames.Aluminite] = 60,
+		},
+		BuildTime = 6,
+		Size = { X = 3, Y = 3 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Smart payload switcher. Routes to any connected output.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		AcceptsUnitInput = true,
+		OutputsResources = true,
+		OutputsUnit = false,
+	},
+	[ObjectNames["Dispatch Bay"]] = {
+		HP = 150,
+		Cost = {
+			[ObjectNames.Ferrocast] = 150,
+			[ObjectNames.Silicon] = 100,
+			[ObjectNames.Aluminite] = 80,
+		},
+		BuildTime = 8,
+		Size = { X = 3, Y = 3 },
+		Category = Categories.Factory,
+		Icon = 0,
+		Description = "Launches produced units onto the battlefield.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		AcceptsUnitInput = true,
+		OutputsResources = false,
+		OutputsUnit = true,
+	},
+
+	-- ============
+	-- TURRETS
+	-- ============
+	[ObjectNames["Cannon"]] = {
+		HP = 150,
+		Cost = {
+			[ObjectNames.Copper] = 60,
+			[ObjectNames.Ironstone] = 40,
+			[ObjectNames.Bronze] = 20,
+		},
+		BuildTime = 3,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Basic single target turret. Reliable, low cost.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Flak Turret"]] = {
+		HP = 185,
+		Cost = {
+			[ObjectNames.Copper] = 80,
+			[ObjectNames.Bronze] = 60,
+			[ObjectNames.Aluminite] = 40,
+		},
+		BuildTime = 4,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Dedicated anti-air. Fast projectile speed. Cannot target ground.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Howitzer"]] = {
+		HP = 320,
+		Cost = {
+			[ObjectNames.Ferrocast] = 120,
+			[ObjectNames.Bronze] = 80,
+			[ObjectNames.Coal] = 40,
+		},
+		BuildTime = 6,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Arcing splash artillery. Minimum range blind spot.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Railgun"]] = {
+		HP = 300,
+		Cost = {
+			[ObjectNames.Aluminite] = 150,
+			[ObjectNames.Silicon] = 120,
+			[ObjectNames.Quartzite] = 80,
+		},
+		BuildTime = 8,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Advanced anti-air. High velocity tracking missiles.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+	[ObjectNames["Flamethrower"]] = {
+		HP = 200,
+		Cost = {
+			[ObjectNames.Ferrocast] = 100,
+			[ObjectNames.Coal] = 60,
+		},
+		BuildTime = 5,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Short range continuous fire. Burns through groups.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Tesla Tower"]] = {
+		HP = 280,
+		Cost = {
+			[ObjectNames.Silicon] = 180,
+			[ObjectNames.Quartzite] = 150,
+			[ObjectNames.Aluminite] = 100,
+		},
+		BuildTime = 8,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Chaining arc bolt. Jumps between up to 3 targets.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+	[ObjectNames["Mortar"]] = {
+		HP = 300,
+		Cost = {
+			[ObjectNames.Ferrocast] = 150,
+			[ObjectNames.Silicon] = 100,
+			[ObjectNames.Graphite] = 80,
+		},
+		BuildTime = 7,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Long range lobbed splash. Large splash radius.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Sniper"]] = {
+		HP = 250,
+		Cost = {
+			[ObjectNames.Ferrocast] = 140,
+			[ObjectNames.Silicon] = 100,
+			[ObjectNames.Quartzite] = 80,
+		},
+		BuildTime = 7,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Extreme range single target. Slow reload, very high damage.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Laser Cannon"]] = {
+		HP = 400,
+		Cost = {
+			[ObjectNames.Quartzite] = 250,
+			[ObjectNames.Silicon] = 200,
+			[ObjectNames.Steel] = 100,
+		},
+		BuildTime = 12,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Turret,
+		Icon = 0,
+		Description = "Piercing laser. Hits all enemies in a line. Slow reload.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+
+	-- ============
+	-- WALLS
+	-- ============
+	[ObjectNames["Ironstone Wall"]] = {
+		HP = 160,
+		Cost = {
+			[ObjectNames.Ironstone] = 15,
+			[ObjectNames.Copper] = 10,
+		},
+		BuildTime = 1,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Wall,
+		Icon = 0,
+		Description = "Basic wall. First line of defense.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Ferrocast Wall"]] = {
+		HP = 400,
+		Cost = {
+			[ObjectNames.Ferrocast] = 20,
+			[ObjectNames.Ironstone] = 10,
+		},
+		BuildTime = 2,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Wall,
+		Icon = 0,
+		Description = "Dense cast iron wall. Standard mid-game defense.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Quartzite Wall"]] = {
+		HP = 850,
+		Cost = {
+			[ObjectNames.Quartzite] = 25,
+			[ObjectNames.Ferrocast] = 15,
+		},
+		BuildTime = 3,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Wall,
+		Icon = 0,
+		Description = "Crystal lattice wall. High HP.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+	[ObjectNames["Steel Wall"]] = {
+		HP = 2200,
+		Cost = {
+			[ObjectNames.Steel] = 30,
+			[ObjectNames.Quartzite] = 20,
+		},
+		BuildTime = 5,
+		Size = { X = 1, Y = 1 },
+		Category = Categories.Wall,
+		Icon = 0,
+		Description = "Apex wall. Near indestructible.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = false,
+		OutputsResources = false,
+	},
+
+	-- ============
+	-- UNIT FACTORIES
+	-- ============
+	[ObjectNames["Tank Factory Basic"]] = {
+		HP = 350,
+		Cost = {
+			[ObjectNames.Ferrocast] = 180,
+			[ObjectNames.Copper] = 150,
+			[ObjectNames.Coal] = 60,
+		},
+		BuildTime = 15,
+		Size = { X = 4, Y = 4 },
+		Category = Categories["Unit Factory"],
+		Icon = 0,
+		Description = "Produces Basic Tank, Light Tank and Flak Walker.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+		OutputsUnit = true,
+	},
+	[ObjectNames["Tank Factory Advanced"]] = {
+		HP = 520,
+		Cost = {
+			[ObjectNames.Ferrocast] = 400,
+			[ObjectNames.Quartzite] = 200,
+			[ObjectNames.Aluminite] = 120,
+			[ObjectNames.Steel] = 30,
+		},
+		BuildTime = 30,
+		Size = { X = 5, Y = 5 },
+		Category = Categories["Unit Factory"],
+		Icon = 0,
+		Description = "Produces Super Heavy Tank, Sniper Tank and Howitzer Tank.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+		OutputsUnit = true,
+	},
+	[ObjectNames["Drone Factory Basic"]] = {
+		HP = 260,
+		Cost = {
+			[ObjectNames.Aluminite] = 160,
+			[ObjectNames.Quartz] = 100,
+			[ObjectNames.Copper] = 40,
+		},
+		BuildTime = 12,
+		Size = { X = 3, Y = 3 },
+		Category = Categories["Unit Factory"],
+		Icon = 0,
+		Description = "Produces Basic Drone, Bomber Drone and Kamikaze Drone.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+		OutputsUnit = true,
+	},
+	[ObjectNames["Drone Factory Advanced"]] = {
+		HP = 380,
+		Cost = {
+			[ObjectNames.Aluminite] = 300,
+			[ObjectNames.Quartzite] = 200,
+			[ObjectNames.Steel] = 80,
+			[ObjectNames.Crude] = 50,
+		},
+		BuildTime = 25,
+		Size = { X = 4, Y = 4 },
+		Category = Categories["Unit Factory"],
+		Icon = 0,
+		Description = "Produces Gunship, AA Drone and Stealth Drone.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+		OutputsUnit = true,
+	},
+	[ObjectNames["Support Factory Basic"]] = {
+		HP = 220,
+		Cost = {
+			[ObjectNames.Ferrocast] = 140,
+			[ObjectNames.Quartz] = 100,
+			[ObjectNames.Aluminite] = 50,
+		},
+		BuildTime = 12,
+		Size = { X = 3, Y = 3 },
+		Category = Categories["Unit Factory"],
+		Icon = 0,
+		Description = "Produces Artillery Walker, AA Crawler and Medic Walker.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+		OutputsUnit = true,
+	},
+	[ObjectNames["Support Factory Advanced"]] = {
+		HP = 340,
+		Cost = {
+			[ObjectNames.Quartzite] = 350,
+			[ObjectNames.Aluminite] = 200,
+			[ObjectNames.Steel] = 100,
+			[ObjectNames.Ferrocast] = 60,
+		},
+		BuildTime = 25,
+		Size = { X = 4, Y = 4 },
+		Category = Categories["Unit Factory"],
+		Icon = 0,
+		Description = "Produces Projectile Interceptor, Kamikaze Drone Manufacturer and Commander.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+		OutputsUnit = true,
+	},
+
+	-- ============
+	-- STORAGE
+	-- ============
+	[ObjectNames["Vault"]] = {
+		HP = 280,
+		Cost = {
+			[ObjectNames.Copper] = 40,
+			[ObjectNames.Ironstone] = 30,
+			[ObjectNames.Bronze] = 20,
+		},
+		BuildTime = 4,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Storage,
+		Icon = 0,
+		Description = "Large resource storage. Connects to Core pool or standalone.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Crate"]] = {
+		HP = 180,
+		Cost = {
+			[ObjectNames.Copper] = 20,
+			[ObjectNames.Bronze] = 15,
+		},
+		BuildTime = 2,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Storage,
+		Icon = 0,
+		Description = "Standalone local buffer. Not connected to Core pool.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+	[ObjectNames["Liquid Tank"]] = {
+		HP = 200,
+		Cost = {
+			[ObjectNames.Ferrocast] = 60,
+			[ObjectNames.Glassite] = 40,
+		},
+		BuildTime = 4,
+		Size = { X = 2, Y = 2 },
+		Category = Categories.Storage,
+		Icon = 0,
+		Description = "General purpose liquid storage buffer.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		OutputsResources = true,
+	},
+
+	-- ============
+	-- BUILDING MENDER
+	-- ============
+	[ObjectNames["Mending Pulsator"]] = {
+		HP = 120,
+		Cost = {
+			[ObjectNames.Ferrocast] = 80,
+			[ObjectNames.Silicon] = 60,
+			[ObjectNames.Glassite] = 40,
+		},
+		BuildTime = 5,
+		Size = { X = 2, Y = 2 },
+		Category = Categories["Building Mender"],
+		Icon = 0,
+		Description = "Passively repairs nearby buildings over time.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+
+	-- ============
+	-- UNIT MENDER
+	-- ============
+	[ObjectNames["Mend Point"]] = {
+		HP = 80,
+		Cost = {
+			[ObjectNames.Ferrocast] = 50,
+			[ObjectNames.Silicon] = 40,
+			[ObjectNames.Bronze] = 20,
+		},
+		BuildTime = 3,
+		Size = { X = 1, Y = 1 },
+		Category = Categories["Unit Mender"],
+		Icon = 0,
+		Description = "Heals nearby units. High priority enemy target.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+	[ObjectNames["Mend Tower"]] = {
+		HP = 160,
+		Cost = {
+			[ObjectNames.Ferrocast] = 120,
+			[ObjectNames.Silicon] = 100,
+			[ObjectNames.Quartzite] = 60,
+		},
+		BuildTime = 6,
+		Size = { X = 2, Y = 2 },
+		Category = Categories["Unit Mender"],
+		Icon = 0,
+		Description = "Stronger heal beam. Longer range than Mend Point.",
+		AcceptsResourceInput = false,
+		AcceptsPowerInput = true,
+		OutputsResources = false,
+	},
+}
+
+-- ============================================================
+-- GETTER APIs
+-- ============================================================
+
+-- Check if building exists in config
+function BuildingConfig.Exists(buildingId)
+	return BuildingConfig[buildingId] ~= nil
+end
+
+-- Get full config entry
+function BuildingConfig.Get(buildingId)
+	local config = BuildingConfig[buildingId]
+	if not config then
+		warn("BuildingConfig.Get: building not found ->", buildingId)
+		return nil
+	end
+	return config
+end
+
+-- Get HP
+function BuildingConfig.GetHP(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.HP
+end
+
+-- Get build cost table
+function BuildingConfig.GetCost(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.Cost
+end
+
+-- Get build time in seconds
+function BuildingConfig.GetBuildTime(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.BuildTime
+end
+
+-- Get size table {X, Y}
+function BuildingConfig.GetSize(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.Size
+end
+
+-- Get category
+function BuildingConfig.GetCategory(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.Category
+end
+
+-- Get icon image id
+function BuildingConfig.GetIcon(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.Icon
+end
+
+-- Get description
+function BuildingConfig.GetDescription(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.Description
+end
+
+-- Check if building accepts resource input
+function BuildingConfig.AcceptsResourceInput(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.AcceptsResourceInput
+end
+
+-- Check if building accepts power input
+function BuildingConfig.AcceptsPowerInput(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.AcceptsPowerInput
+end
+
+-- Check if building outputs resources
+function BuildingConfig.OutputsResources(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.OutputsResources
+end
+
+-- Get all buildings of a specific category
+function BuildingConfig.GetByCategory(category)
+	local results = {}
+	for id, config in pairs(BuildingConfig) do
+		if type(config) == "table" and config.Category == category then
+			table.insert(results, id)
+		end
+	end
+	return results
+end
+
+-- Check if building outputs units
+function BuildingConfig.OutputsUnit(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.OutputsUnit == true
+end
+
+-- Check if player can afford to build
+-- resourceBank = { ["Copper"] = 500, ... }
+function BuildingConfig.CanAfford(buildingId, resourceBank)
+	local config = BuildingConfig.Get(buildingId)
+	if not config then
+		return false
+	end
+	for resource, amount in pairs(config.Cost) do
+		if (resourceBank[resource] or 0) < amount then
+			return false
+		end
+	end
+	return true
+end
+
+-- Check if building accepts unit input (payload conveyors)
+function BuildingConfig.AcceptsUnitInput(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.AcceptsUnitInput == true
+end
+
+return BuildingConfig

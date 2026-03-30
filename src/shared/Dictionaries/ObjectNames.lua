@@ -1,4 +1,9 @@
 local ObjectNames = {
+	-- ============
+	-- Unit Types
+	-- ============
+	Ground = "Ground",
+	Air = "Air",
 
 	-- ============
 	-- ORES / RAW
@@ -26,7 +31,8 @@ local ObjectNames = {
 	Steel = "Steel",
 	Coolant = "Coolant",
 	Crude = "Crude",
-
+	["Refined Uranium"] = "Refined Uranium",
+	["Pyro Charge"] = "Pyro Charge",
 	-- ============
 	-- DRILLS
 	-- ============
@@ -82,12 +88,16 @@ local ObjectNames = {
 	-- POWER
 	-- ============
 	["Coal Generator"] = "Coal Generator",
-	["Solar Panel"] = "Solar Panel",
 	["Steam Generator"] = "Steam Generator",
+	["Solar Panel"] = "Solar Panel",
 	["Geothermal Vent"] = "Geothermal Vent",
 	["Nuclear Reactor"] = "Nuclear Reactor",
 	["Safety Module"] = "Safety Module",
 	["Reinforcement Module"] = "Reinforcement Module",
+	["Small Battery"] = "Small Battery",
+	["Large Battery"] = "Large Battery",
+	["Small Power Node"] = "Small Power Node",
+	["Large Power Node"] = "Large Power Node",
 
 	-- ============
 	-- TURRETS
