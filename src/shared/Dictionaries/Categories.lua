@@ -6,7 +6,6 @@ Categories = {
 	Wall = "Wall",
 	Unit = "Unit",
 	Core = "Core",
-	["Unit Factory"] = "Unit Factory",
 	Drill = "Drill",
 	["Building Mender"] = "Building Mender",
 	["Unit Mender"] = "Unit Mender",
