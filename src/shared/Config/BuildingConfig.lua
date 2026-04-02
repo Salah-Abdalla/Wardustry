@@ -17,7 +17,11 @@ local BuildingConfig = {
 		Description = "Your base. Stores all resources. Game over if destroyed.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Core Bastion"]] = {
 		HP = 2400,
@@ -33,7 +37,11 @@ local BuildingConfig = {
 		Description = "Upgraded Core. Higher storage and extractor aura.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Core Citadel"]] = {
 		HP = 5500,
@@ -50,7 +58,11 @@ local BuildingConfig = {
 		Description = "Apex Core. Massive storage, repair field, production aura.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 
 	-- ============
@@ -69,7 +81,11 @@ local BuildingConfig = {
 		Description = "Starter drill. Mines T1 ores — Copper, Ironstone, Coal.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Pneumatic Drill"]] = {
 		HP = 130,
@@ -85,7 +101,11 @@ local BuildingConfig = {
 		Description = "Mines T1-T2 ores including Bauxite and Quartz.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Laser Drill"]] = {
 		HP = 210,
@@ -98,10 +118,14 @@ local BuildingConfig = {
 		Size = { X = 3, Y = 3 },
 		Category = Categories.Drill,
 		Icon = 0,
-		Description = "Mines all ores up to T3 including Crystite. Requires power.",
+		Description = "Mines all ores up to T3. Requires power.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Mega Drill"]] = {
 		HP = 300,
@@ -118,7 +142,11 @@ local BuildingConfig = {
 		Description = "Mines all ores including Uranium. Highest throughput. High power draw.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Liquid Extractor"]] = {
 		HP = 110,
@@ -134,7 +162,11 @@ local BuildingConfig = {
 		Description = "Extracts liquids from deposit tiles. Outputs to ducts.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 
 	-- ============
@@ -153,7 +185,11 @@ local BuildingConfig = {
 		Description = "Combines Copper and Tin into Bronze.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Ironstone Forge"]] = {
 		HP = 90,
@@ -169,7 +205,11 @@ local BuildingConfig = {
 		Description = "Smelts Ironstone and Coal into Ferrocast.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Sand Kiln"]] = {
 		HP = 80,
@@ -184,7 +224,11 @@ local BuildingConfig = {
 		Description = "Processes Sand into Glassite.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Bauxite Refinery"]] = {
 		HP = 95,
@@ -199,7 +243,11 @@ local BuildingConfig = {
 		Description = "Refines Bauxite into Aluminite.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Graphite Press"]] = {
 		HP = 80,
@@ -214,7 +262,11 @@ local BuildingConfig = {
 		Description = "Compresses Coal into Graphite.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Silicon Smelter"]] = {
 		HP = 90,
@@ -230,7 +282,11 @@ local BuildingConfig = {
 		Description = "Produces Silicon from Coal and Sand.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Quartz Press"]] = {
 		HP = 140,
@@ -246,7 +302,11 @@ local BuildingConfig = {
 		Description = "Combines Quartz and Ferrocast into Quartzite.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Steel Manufactuary"]] = {
 		HP = 180,
@@ -262,7 +322,11 @@ local BuildingConfig = {
 		Description = "Produces Steel — the endgame structural material.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Crude Vat"]] = {
 		HP = 90,
@@ -278,7 +342,11 @@ local BuildingConfig = {
 		Description = "Produces Crude liquid from Coal and Coolant.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Uranium Refinery"]] = {
 		HP = 160,
@@ -294,7 +362,11 @@ local BuildingConfig = {
 		Description = "Refines raw Uranium into Refined Uranium for the Nuclear Reactor.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Coolant Mixer"]] = {
 		HP = 100,
@@ -310,11 +382,15 @@ local BuildingConfig = {
 		Description = "Combines Bauxite and Water into Coolant liquid.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 
 	-- ============
-	-- POWER GENERATORS
+	-- POWER
 	-- ============
 	[ObjectNames["Coal Generator"]] = {
 		HP = 120,
@@ -330,7 +406,31 @@ local BuildingConfig = {
 		Description = "Burns Coal to produce FC power. Starter generator.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
+	},
+	[ObjectNames["Steam Generator"]] = {
+		HP = 140,
+		Cost = {
+			[ObjectNames.Ferrocast] = 80,
+			[ObjectNames.Copper] = 60,
+			[ObjectNames.Glassite] = 40,
+		},
+		BuildTime = 8,
+		Size = { X = 2, Y = 2 },
+		Category = Categories["Power Generator"],
+		Icon = 0,
+		Description = "Burns Coal with Water input for higher output than Coal Generator.",
+		AcceptsResourceInput = true,
+		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
+		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Solar Panel"]] = {
 		HP = 80,
@@ -346,7 +446,11 @@ local BuildingConfig = {
 		Description = "Passive power. No fuel. Low individual output.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Geothermal Vent"]] = {
 		HP = 160,
@@ -362,7 +466,11 @@ local BuildingConfig = {
 		Description = "Passive geothermal power. Placed on vent tiles only.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Nuclear Reactor"]] = {
 		HP = 500,
@@ -379,7 +487,11 @@ local BuildingConfig = {
 		Description = "High output reactor. Requires Refined Uranium and Coolant. Explodes if destroyed while fuelled.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Safety Module"]] = {
 		HP = 200,
@@ -395,7 +507,11 @@ local BuildingConfig = {
 		Description = "Reactor upgrade. Clean shutdown on coolant loss instead of meltdown.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Reinforcement Module"]] = {
 		HP = 300,
@@ -410,34 +526,12 @@ local BuildingConfig = {
 		Description = "Reactor upgrade. Significantly increases reactor HP.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
-		OutputsResources = false,
-	},
-
-	-- ============
-	-- STEAM GENERATOR
-	-- ============
-	[ObjectNames["Steam Generator"]] = {
-		HP = 140,
-		Cost = {
-			[ObjectNames.Ferrocast] = 80,
-			[ObjectNames.Copper] = 60,
-			[ObjectNames.Glassite] = 40,
-		},
-		BuildTime = 8,
-		Size = { X = 2, Y = 2 },
-		Category = Categories["Power Generator"],
-		Icon = 0,
-		Description = "Burns Coal with Water input for higher output than Coal Generator. Water shortage drops output 50%.",
-		AcceptsResourceInput = true,
-		AcceptsPowerInput = false,
 		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
-
-	-- ============
-	-- SMALL BATTERY
-	-- ============
 	[ObjectNames["Small Battery"]] = {
 		HP = 80,
 		Cost = {
@@ -449,17 +543,15 @@ local BuildingConfig = {
 		Size = { X = 1, Y = 1 },
 		Category = Categories.Battery,
 		Icon = 0,
-		Description = "Stores 200 FC. Charges on surplus, discharges on deficit. Explodes if destroyed at full charge.",
+		Description = "Stores 200 FC. Charges on surplus, discharges on deficit.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
 		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
-
-	-- ============
-	-- LARGE BATTERY
-	-- ============
 	[ObjectNames["Large Battery"]] = {
 		HP = 200,
 		Cost = {
@@ -477,11 +569,9 @@ local BuildingConfig = {
 		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
-
-	-- ============
-	-- SMALL POWER NODE
-	-- ============
 	[ObjectNames["Small Power Node"]] = {
 		HP = 60,
 		Cost = {
@@ -498,11 +588,9 @@ local BuildingConfig = {
 		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
-
-	-- ============
-	-- LARGE POWER NODE
-	-- ============
 	[ObjectNames["Large Power Node"]] = {
 		HP = 120,
 		Cost = {
@@ -520,6 +608,8 @@ local BuildingConfig = {
 		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 
 	-- ============
@@ -535,7 +625,11 @@ local BuildingConfig = {
 		Description = "Basic item belt. 5 items/sec.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Express Conveyor"]] = {
 		HP = 60,
@@ -550,7 +644,11 @@ local BuildingConfig = {
 		Description = "Fast item belt. 10 items/sec.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Reinforced Conveyor"]] = {
 		HP = 200,
@@ -565,7 +663,11 @@ local BuildingConfig = {
 		Description = "Armored belt. High HP, same speed as Express.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Sprint Conveyor"]] = {
 		HP = 40,
@@ -580,7 +682,11 @@ local BuildingConfig = {
 		Description = "Fastest belt. Very fragile. 14 items/sec.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Gate Splitter"]] = {
 		HP = 40,
@@ -595,7 +701,11 @@ local BuildingConfig = {
 		Description = "Routes overflow to sides when downstream is backed up.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Sieve"]] = {
 		HP = 40,
@@ -610,7 +720,11 @@ local BuildingConfig = {
 		Description = "Filters one item type forward, deflects others sideways.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Crossway"]] = {
 		HP = 40,
@@ -625,7 +739,11 @@ local BuildingConfig = {
 		Description = "Lets two belt lines cross without mixing.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Span Conveyor"]] = {
 		HP = 60,
@@ -640,7 +758,11 @@ local BuildingConfig = {
 		Description = "Bridges over other buildings up to 5 tiles.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 
 	-- ============
@@ -659,7 +781,11 @@ local BuildingConfig = {
 		Description = "Basic liquid transport. 10 units/sec.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Conduit"]] = {
 		HP = 70,
@@ -674,7 +800,11 @@ local BuildingConfig = {
 		Description = "High flow liquid transport. 22 units/sec.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Pipe Bridge"]] = {
 		HP = 60,
@@ -689,7 +819,11 @@ local BuildingConfig = {
 		Description = "Bridges liquid transport over other buildings.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Manifold"]] = {
 		HP = 80,
@@ -705,7 +839,11 @@ local BuildingConfig = {
 		Description = "Smart liquid router. Splits and directs liquid flow.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 
 	-- ============
@@ -728,6 +866,8 @@ local BuildingConfig = {
 		AcceptsUnitInput = true,
 		OutputsResources = true,
 		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Haul Router"]] = {
 		HP = 110,
@@ -746,6 +886,8 @@ local BuildingConfig = {
 		AcceptsUnitInput = true,
 		OutputsResources = true,
 		OutputsUnit = false,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Dispatch Bay"]] = {
 		HP = 150,
@@ -764,6 +906,8 @@ local BuildingConfig = {
 		AcceptsUnitInput = true,
 		OutputsResources = false,
 		OutputsUnit = true,
+		CanRotate = true,
+		Armor = 0,
 	},
 
 	-- ============
@@ -783,7 +927,11 @@ local BuildingConfig = {
 		Description = "Basic single target turret. Reliable, low cost.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Flak Turret"]] = {
 		HP = 185,
@@ -799,7 +947,11 @@ local BuildingConfig = {
 		Description = "Dedicated anti-air. Fast projectile speed. Cannot target ground.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Howitzer"]] = {
 		HP = 320,
@@ -815,7 +967,11 @@ local BuildingConfig = {
 		Description = "Arcing splash artillery. Minimum range blind spot.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Railgun"]] = {
 		HP = 300,
@@ -831,7 +987,11 @@ local BuildingConfig = {
 		Description = "Advanced anti-air. High velocity tracking missiles.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Flamethrower"]] = {
 		HP = 200,
@@ -846,7 +1006,11 @@ local BuildingConfig = {
 		Description = "Short range continuous fire. Burns through groups.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Tesla Tower"]] = {
 		HP = 280,
@@ -862,7 +1026,11 @@ local BuildingConfig = {
 		Description = "Chaining arc bolt. Jumps between up to 3 targets.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Mortar"]] = {
 		HP = 300,
@@ -878,7 +1046,11 @@ local BuildingConfig = {
 		Description = "Long range lobbed splash. Large splash radius.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Sniper"]] = {
 		HP = 250,
@@ -894,7 +1066,11 @@ local BuildingConfig = {
 		Description = "Extreme range single target. Slow reload, very high damage.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Laser Cannon"]] = {
 		HP = 400,
@@ -910,7 +1086,11 @@ local BuildingConfig = {
 		Description = "Piercing laser. Hits all enemies in a line. Slow reload.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 
 	-- ============
@@ -929,7 +1109,11 @@ local BuildingConfig = {
 		Description = "Basic wall. First line of defense.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Ferrocast Wall"]] = {
 		HP = 400,
@@ -944,7 +1128,11 @@ local BuildingConfig = {
 		Description = "Dense cast iron wall. Standard mid-game defense.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Quartzite Wall"]] = {
 		HP = 850,
@@ -959,7 +1147,11 @@ local BuildingConfig = {
 		Description = "Crystal lattice wall. High HP.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Steel Wall"]] = {
 		HP = 2200,
@@ -974,7 +1166,11 @@ local BuildingConfig = {
 		Description = "Apex wall. Near indestructible.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 
 	-- ============
@@ -991,11 +1187,14 @@ local BuildingConfig = {
 		Size = { X = 4, Y = 4 },
 		Category = Categories["Unit Factory"],
 		Icon = 0,
-		Description = "Produces Basic Tank, Light Tank and Flak Walker.",
+		Description = "Produces Basic Tank, Light Tank and Basic Heavy Tank.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = true,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Tank Factory Advanced"]] = {
 		HP = 520,
@@ -1012,8 +1211,11 @@ local BuildingConfig = {
 		Description = "Produces Super Heavy Tank, Sniper Tank and Howitzer Tank.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = true,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Drone Factory Basic"]] = {
 		HP = 260,
@@ -1029,8 +1231,11 @@ local BuildingConfig = {
 		Description = "Produces Basic Drone, Bomber Drone and Kamikaze Drone.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = true,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Drone Factory Advanced"]] = {
 		HP = 380,
@@ -1047,8 +1252,11 @@ local BuildingConfig = {
 		Description = "Produces Gunship, AA Drone and Stealth Drone.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = true,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Support Factory Basic"]] = {
 		HP = 220,
@@ -1064,8 +1272,11 @@ local BuildingConfig = {
 		Description = "Produces Artillery Walker, AA Crawler and Medic Walker.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = true,
+		CanRotate = true,
+		Armor = 0,
 	},
 	[ObjectNames["Support Factory Advanced"]] = {
 		HP = 340,
@@ -1082,8 +1293,11 @@ local BuildingConfig = {
 		Description = "Produces Projectile Interceptor, Kamikaze Drone Manufacturer and Commander.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
 		OutputsUnit = true,
+		CanRotate = true,
+		Armor = 0,
 	},
 
 	-- ============
@@ -1103,7 +1317,11 @@ local BuildingConfig = {
 		Description = "Large resource storage. Connects to Core pool or standalone.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Crate"]] = {
 		HP = 180,
@@ -1118,7 +1336,11 @@ local BuildingConfig = {
 		Description = "Standalone local buffer. Not connected to Core pool.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Liquid Tank"]] = {
 		HP = 200,
@@ -1133,7 +1355,11 @@ local BuildingConfig = {
 		Description = "General purpose liquid storage buffer.",
 		AcceptsResourceInput = true,
 		AcceptsPowerInput = false,
+		AcceptsUnitInput = false,
 		OutputsResources = true,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 
 	-- ============
@@ -1153,7 +1379,11 @@ local BuildingConfig = {
 		Description = "Passively repairs nearby buildings over time.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 
 	-- ============
@@ -1173,7 +1403,11 @@ local BuildingConfig = {
 		Description = "Heals nearby units. High priority enemy target.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 	[ObjectNames["Mend Tower"]] = {
 		HP = 160,
@@ -1189,7 +1423,11 @@ local BuildingConfig = {
 		Description = "Stronger heal beam. Longer range than Mend Point.",
 		AcceptsResourceInput = false,
 		AcceptsPowerInput = true,
+		AcceptsUnitInput = false,
 		OutputsResources = false,
+		OutputsUnit = false,
+		CanRotate = false,
+		Armor = 0,
 	},
 }
 
@@ -1197,12 +1435,10 @@ local BuildingConfig = {
 -- GETTER APIs
 -- ============================================================
 
--- Check if building exists in config
 function BuildingConfig.Exists(buildingId)
 	return BuildingConfig[buildingId] ~= nil
 end
 
--- Get full config entry
 function BuildingConfig.Get(buildingId)
 	local config = BuildingConfig[buildingId]
 	if not config then
@@ -1212,67 +1448,76 @@ function BuildingConfig.Get(buildingId)
 	return config
 end
 
--- Get HP
 function BuildingConfig.GetHP(buildingId)
 	local config = BuildingConfig.Get(buildingId)
 	return config and config.HP
 end
 
--- Get build cost table
 function BuildingConfig.GetCost(buildingId)
 	local config = BuildingConfig.Get(buildingId)
 	return config and config.Cost
 end
 
--- Get build time in seconds
 function BuildingConfig.GetBuildTime(buildingId)
 	local config = BuildingConfig.Get(buildingId)
 	return config and config.BuildTime
 end
 
--- Get size table {X, Y}
 function BuildingConfig.GetSize(buildingId)
 	local config = BuildingConfig.Get(buildingId)
 	return config and config.Size
 end
 
--- Get category
 function BuildingConfig.GetCategory(buildingId)
 	local config = BuildingConfig.Get(buildingId)
 	return config and config.Category
 end
 
--- Get icon image id
 function BuildingConfig.GetIcon(buildingId)
 	local config = BuildingConfig.Get(buildingId)
 	return config and config.Icon
 end
 
--- Get description
+function BuildingConfig.GetArmor(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.Armor or 0
+end
+
 function BuildingConfig.GetDescription(buildingId)
 	local config = BuildingConfig.Get(buildingId)
 	return config and config.Description
 end
 
--- Check if building accepts resource input
 function BuildingConfig.AcceptsResourceInput(buildingId)
 	local config = BuildingConfig.Get(buildingId)
-	return config and config.AcceptsResourceInput
+	return config and config.AcceptsResourceInput == true
 end
 
--- Check if building accepts power input
 function BuildingConfig.AcceptsPowerInput(buildingId)
 	local config = BuildingConfig.Get(buildingId)
-	return config and config.AcceptsPowerInput
+	return config and config.AcceptsPowerInput == true
 end
 
--- Check if building outputs resources
+function BuildingConfig.AcceptsUnitInput(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.AcceptsUnitInput == true
+end
+
 function BuildingConfig.OutputsResources(buildingId)
 	local config = BuildingConfig.Get(buildingId)
-	return config and config.OutputsResources
+	return config and config.OutputsResources == true
 end
 
--- Get all buildings of a specific category
+function BuildingConfig.OutputsUnit(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.OutputsUnit == true
+end
+
+function BuildingConfig.CanRotate(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.CanRotate == true
+end
+
 function BuildingConfig.GetByCategory(category)
 	local results = {}
 	for id, config in pairs(BuildingConfig) do
@@ -1283,14 +1528,6 @@ function BuildingConfig.GetByCategory(category)
 	return results
 end
 
--- Check if building outputs units
-function BuildingConfig.OutputsUnit(buildingId)
-	local config = BuildingConfig.Get(buildingId)
-	return config and config.OutputsUnit == true
-end
-
--- Check if player can afford to build
--- resourceBank = { ["Copper"] = 500, ... }
 function BuildingConfig.CanAfford(buildingId, resourceBank)
 	local config = BuildingConfig.Get(buildingId)
 	if not config then
@@ -1302,12 +1539,6 @@ function BuildingConfig.CanAfford(buildingId, resourceBank)
 		end
 	end
 	return true
-end
-
--- Check if building accepts unit input (payload conveyors)
-function BuildingConfig.AcceptsUnitInput(buildingId)
-	local config = BuildingConfig.Get(buildingId)
-	return config and config.AcceptsUnitInput == true
 end
 
 return BuildingConfig
