@@ -5,6 +5,9 @@
 local Knit = require(game:GetService("ReplicatedStorage").Packages.Knit)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
+
+local TeamService = require(ServerScriptService.Services.TeamService)
 local BuildingConfig = require(ReplicatedStorage.Config.BuildingConfig)
 local Categories = require(ReplicatedStorage.Dictionaries.Categories)
 local ObjectNames = require(ReplicatedStorage.Dictionaries.ObjectNames)
@@ -88,6 +91,8 @@ function StructureService:Register(model, structureName, team)
 		MaxHP = maxHP,
 		Armor = armor or 0,
 	}
+
+	TeamService:AddStructureToTeam(structureObj, team)
 
 	_structures[model] = structureObj
 	print(

@@ -1,14 +1,67 @@
 local ServerStorage = game:GetService("ServerStorage")
+local Players = game:GetService("Players")
+
 -- GridService.lua
 local Knit = require(game.ReplicatedStorage.Packages.Knit)
 
 local GridService = Knit.CreateService({
 	Name = "GridService",
-	Client = {},
+	Client = {
+		TileUpdated = Knit.CreateSignal(), -- (x, z, tileData) fired on every tile change
+		GridSnapshot = Knit.CreateSignal(), -- (snapshot) fired to a player on join
+	},
 })
 
 local TILE_SIZE = 4
 local Grid = {}
+
+-- ============================================================
+-- INTERNAL SYNC HELPERS
+-- ============================================================
+
+local function TileData(tile)
+	if not tile then
+		return {
+			Building = nil,
+			OreId = nil,
+			IsObstruction = false,
+			ObstructionHeight = 0,
+			SpecialTile = nil,
+		}
+	end
+	return {
+		Building = tile.Building,
+		OreId = tile.OreId,
+		IsObstruction = tile.IsObstruction,
+		ObstructionHeight = tile.ObstructionHeight,
+		SpecialTile = tile.SpecialTile,
+	}
+end
+
+local function FireTileUpdate(x, z, tile)
+	for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
+		GridService.Client.TileUpdated:Fire(player, x, z, TileData(tile))
+	end
+end
+
+local function BuildSnapshot()
+	local snapshot = {
+		SizeX = GridService._sizeX,
+		SizeZ = GridService._sizeZ,
+		Tiles = {},
+	}
+	for x, col in pairs(Grid) do
+		snapshot.Tiles[x] = {}
+		for z, tile in pairs(col) do
+			snapshot.Tiles[x][z] = TileData(tile)
+		end
+	end
+	return snapshot
+end
+
+-- ============================================================
+-- LOAD FROM SECTOR
+-- ============================================================
 
 function GridService:LoadFromSector(sectorName)
 	local sectors = ServerStorage:FindFirstChild("Sectors")
@@ -33,7 +86,7 @@ function GridService:LoadFromSector(sectorName)
 		self:SetOre(tonumber(x), tonumber(z), oreKind)
 	end
 
-	for key, obsKind in pairs(sectorResult.Obstructions or {}) do
+	for key, _ in pairs(sectorResult.Obstructions or {}) do
 		local x, z = key:match("^(-?%d+),(-?%d+)$")
 		self:SetObstruction(tonumber(x), tonumber(z), 0)
 	end
@@ -48,12 +101,13 @@ function GridService:LoadFromSector(sectorName)
 		self:SetSpecialTile(tonumber(x), tonumber(z), liquidKind)
 	end
 
-	-- mark core tiles as occupied
 	for _, core in ipairs(sectorResult.Cores or {}) do
 		local w = core.W or 2
 		local h = core.H or 2
 		self:SetBuilding(core.X, core.Z, w, h, "Core")
 	end
+
+	return true, nil
 end
 
 -- ============================================================
@@ -94,7 +148,7 @@ end
 function GridService:SetBounds(sizeX, sizeZ)
 	self._sizeX = sizeX
 	self._sizeZ = sizeZ
-	Grid = {} -- clear grid when bounds are set
+	Grid = {}
 end
 
 function GridService:GetSize()
@@ -213,7 +267,7 @@ function GridService:CanPlace(gridX, gridZ, sizeX, sizeZ)
 	for x = gridX, gridX + sizeX - 1 do
 		for z = gridZ, gridZ + sizeZ - 1 do
 			if not InBounds(self, x, z) then
-				return false -- out of bounds counts as blocked
+				return false
 			end
 			if self:IsOccupied(x, z) then
 				return false
@@ -227,18 +281,14 @@ function GridService:GetTilesInRegion(gridX, gridZ, sizeX, sizeZ)
 	local tiles = {}
 	for x = gridX, gridX + sizeX - 1 do
 		for z = gridZ, gridZ + sizeZ - 1 do
-			table.insert(tiles, {
-				X = x,
-				Z = z,
-				Tile = self:GetTile(x, z),
-			})
+			table.insert(tiles, { X = x, Z = z, Tile = self:GetTile(x, z) })
 		end
 	end
 	return tiles
 end
 
 -- ============================================================
--- TILE WRITE
+-- TILE WRITE  (all fire TileUpdated after changing)
 -- ============================================================
 
 function GridService:SetBuilding(gridX, gridZ, sizeX, sizeZ, buildingId)
@@ -247,6 +297,7 @@ function GridService:SetBuilding(gridX, gridZ, sizeX, sizeZ, buildingId)
 			local tile = EnsureTile(self, x, z)
 			if tile then
 				tile.Building = buildingId
+				FireTileUpdate(x, z, tile)
 			end
 		end
 	end
@@ -258,6 +309,7 @@ function GridService:ClearBuilding(gridX, gridZ, sizeX, sizeZ)
 			local tile = self:GetTile(x, z)
 			if tile then
 				tile.Building = nil
+				FireTileUpdate(x, z, tile)
 			end
 		end
 	end
@@ -267,6 +319,7 @@ function GridService:SetOre(x, z, oreId)
 	local tile = EnsureTile(self, x, z)
 	if tile then
 		tile.OreId = oreId
+		FireTileUpdate(x, z, tile)
 	end
 end
 
@@ -274,6 +327,7 @@ function GridService:ClearOre(x, z)
 	local tile = self:GetTile(x, z)
 	if tile then
 		tile.OreId = nil
+		FireTileUpdate(x, z, tile)
 	end
 end
 
@@ -282,6 +336,7 @@ function GridService:SetObstruction(x, z, height)
 	if tile then
 		tile.IsObstruction = true
 		tile.ObstructionHeight = height or 0
+		FireTileUpdate(x, z, tile)
 	end
 end
 
@@ -290,6 +345,7 @@ function GridService:ClearObstruction(x, z)
 	if tile then
 		tile.IsObstruction = false
 		tile.ObstructionHeight = 0
+		FireTileUpdate(x, z, tile)
 	end
 end
 
@@ -297,6 +353,7 @@ function GridService:SetSpecialTile(x, z, kind)
 	local tile = EnsureTile(self, x, z)
 	if tile then
 		tile.SpecialTile = kind
+		FireTileUpdate(x, z, tile)
 	end
 end
 
@@ -304,6 +361,7 @@ function GridService:ClearSpecialTile(x, z)
 	local tile = self:GetTile(x, z)
 	if tile then
 		tile.SpecialTile = nil
+		FireTileUpdate(x, z, tile)
 	end
 end
 
@@ -311,6 +369,15 @@ function GridService:ClearGrid()
 	Grid = {}
 	self._sizeX = nil
 	self._sizeZ = nil
+end
+
+-- ============================================================
+-- CLIENT API
+-- ============================================================
+
+-- Client calls this once on join to get the full grid state
+function GridService.Client:RequestSnapshot(player)
+	return BuildSnapshot()
 end
 
 -- ============================================================
@@ -322,6 +389,15 @@ function GridService:KnitInit()
 	self._sizeZ = nil
 end
 
-function GridService:KnitStart() end
+function GridService:KnitStart()
+	-- Send snapshot to each player when they join
+	Players.PlayerAdded:Connect(function(player)
+		-- wait briefly for grid to be loaded by CampaignService
+		task.wait(1)
+		if GridService._sizeX then
+			GridService.Client.GridSnapshot:Fire(player, BuildSnapshot())
+		end
+	end)
+end
 
 return GridService

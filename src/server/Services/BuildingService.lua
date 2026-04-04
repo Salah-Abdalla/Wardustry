@@ -4,6 +4,7 @@
 
 local Knit = require(game:GetService("ReplicatedStorage").Packages.Knit)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Teams = game:GetService("Teams")
 
 local BuildingConfig = require(ReplicatedStorage.Config.BuildingConfig)
 
@@ -72,26 +73,29 @@ local function SpawnModel(buildingName, worldPos, rotationY)
 end
 
 local function Validate(player, buildingName, gridOrigin, sizeX, sizeZ)
-	-- building exists in config
 	if not BuildingConfig.Exists(buildingName) then
 		return false, "Unknown building: " .. buildingName
 	end
 
-	-- player is on a team
 	local team = TeamService:GetPlayerTeam(player)
 	if not team then
 		return false, "You are not on a team."
 	end
 
-	-- grid space is free
 	if not GridService:CanPlace(gridOrigin.X, gridOrigin.Z, sizeX, sizeZ) then
 		return false, "Cannot place here — space is occupied or out of bounds."
 	end
 
-	-- team can afford it
 	local cost = BuildingConfig.GetCost(buildingName)
-	if cost and not ResourceService:CanAfford(team, cost) then
-		return false, "Insufficient resources."
+	if cost then
+		-- debug: print what the team has vs what is needed
+		print("[BuildingService] Team:", team)
+		print("[BuildingService] Cost:", cost)
+		print("[BuildingService] Resources:", ResourceService:GetAll(team))
+
+		if not ResourceService:CanAfford(team, cost) then
+			return false, "Insufficient resources."
+		end
 	end
 
 	return true, team
@@ -199,6 +203,27 @@ end
 -- ── Client API ──
 function BuildingService.Client:PlaceBuilding(player, request)
 	BuildingService:PlaceBuilding(player, request)
+end
+
+-- Bulk placement — processes each request in order, skips invalid ones
+-- Returns a results array: { { success=bool, message=string } }
+function BuildingService:PlaceBulk(player, requests)
+	if type(requests) ~= "table" then
+		warn("[BuildingService] PlaceBulk: invalid requests table")
+		return
+	end
+	local results = {}
+	for _, request in ipairs(requests) do
+		local ok, msg = pcall(function()
+			BuildingService:PlaceBuilding(player, request)
+		end)
+		table.insert(results, { success = ok, message = ok and "OK" or tostring(msg) })
+	end
+	return results
+end
+
+function BuildingService.Client:PlaceBulk(player, requests)
+	return BuildingService:PlaceBulk(player, requests)
 end
 
 -- ════════════════════════════════════════

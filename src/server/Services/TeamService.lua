@@ -12,8 +12,10 @@ local TeamService = Knit.CreateService({
 
 -- ── Internal storage ──
 -- _teams[teamColor] = {
---     Players = { [player] = true },
---     Core    = coreObject | nil,
+--     Players    = { [player] = true },
+--     Core       = structureTable | nil,
+--     Structures = { [structureTable] = true },
+--     Units      = { [unitTable] = true },
 -- }
 local _teams = {}
 
@@ -42,6 +44,8 @@ function TeamService:CreateTeam(teamColor)
 	_teams[teamColor] = {
 		Players = {},
 		Core = nil,
+		Structures = {},
+		Units = {},
 	}
 	print("[TeamService] Created team: " .. teamColor)
 end
@@ -59,6 +63,8 @@ function TeamService:AddPlayerToTeam(player, teamColor)
 		self:RemovePlayerFromTeam(player, current)
 	end
 
+	player:SetAttribute("TeamColor", teamColor) -- for client access
+
 	_teams[teamColor].Players[player] = true
 	print("[TeamService] " .. player.Name .. " → " .. teamColor)
 end
@@ -71,6 +77,8 @@ function TeamService:RemovePlayerFromTeam(player, teamColor)
 		warn("[TeamService] " .. player.Name .. " is not in team " .. teamColor)
 		return
 	end
+
+	player:SetAttribute("TeamColor", nil) -- clear attribute
 	_teams[teamColor].Players[player] = nil
 end
 
@@ -79,6 +87,9 @@ function TeamService:SetCoreToTeam(core, teamColor)
 	if not EnsureTeam(teamColor) then
 		return
 	end
+
+	core.TeamColor = teamColor
+
 	_teams[teamColor].Core = core
 end
 
@@ -87,6 +98,12 @@ function TeamService:RemoveCoreFromTeam(teamColor)
 	if not EnsureTeam(teamColor) then
 		return
 	end
+
+	local core = _teams[teamColor].Core
+	if core then
+		core.TeamColor = nil
+	end
+
 	_teams[teamColor].Core = nil
 end
 
@@ -126,6 +143,90 @@ function TeamService:GetTeamCore(teamColor)
 		return nil
 	end
 	return _teams[teamColor].Core
+end
+
+-- ── Structures ──
+
+-- Register a structure object with a team
+function TeamService:AddStructureToTeam(structure, teamColor)
+	if not EnsureTeam(teamColor) then
+		return
+	end
+	structure.TeamColor = teamColor
+	_teams[teamColor].Structures[structure] = true
+end
+
+-- Remove a structure from a team (e.g. on destruction)
+function TeamService:RemoveStructureFromTeam(structure, teamColor)
+	if not EnsureTeam(teamColor) then
+		return
+	end
+	structure.TeamColor = nil
+	_teams[teamColor].Structures[structure] = nil
+end
+
+-- Get all structure objects on a team as an array
+function TeamService:GetStructuresFromTeam(teamColor)
+	if not EnsureTeam(teamColor) then
+		return {}
+	end
+	local list = {}
+	for structure in pairs(_teams[teamColor].Structures) do
+		table.insert(list, structure)
+	end
+	return list
+end
+
+-- Get the team color a structure belongs to, or nil
+function TeamService:GetStructureTeam(structure)
+	for teamColor, data in pairs(_teams) do
+		if data.Structures[structure] then
+			return teamColor
+		end
+	end
+	return nil
+end
+
+-- ── Units ──
+
+-- Register a unit object with a team
+function TeamService:AddUnitToTeam(unit, teamColor)
+	if not EnsureTeam(teamColor) then
+		return
+	end
+	unit.TeamColor = teamColor
+	_teams[teamColor].Units[unit] = true
+end
+
+-- Remove a unit from a team (e.g. on death)
+function TeamService:RemoveUnitFromTeam(unit, teamColor)
+	if not EnsureTeam(teamColor) then
+		return
+	end
+	unit.TeamColor = nil
+	_teams[teamColor].Units[unit] = nil
+end
+
+-- Get all unit objects on a team as an array
+function TeamService:GetUnitsFromTeam(teamColor)
+	if not EnsureTeam(teamColor) then
+		return {}
+	end
+	local list = {}
+	for unit in pairs(_teams[teamColor].Units) do
+		table.insert(list, unit)
+	end
+	return list
+end
+
+-- Get the team color a unit belongs to, or nil
+function TeamService:GetUnitTeam(unit)
+	for teamColor, data in pairs(_teams) do
+		if data.Units[unit] then
+			return teamColor
+		end
+	end
+	return nil
 end
 
 -- Get all registered team color strings

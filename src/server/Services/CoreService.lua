@@ -24,8 +24,7 @@ local TeamService
 -- Register a Core for a team
 -- coreData = { TeamColor = string, Model = Model }
 function CoreService:CreateCore(CoreName, model, teamColor)
-	local teamColor = teamColor
-	local model = model
+	print(CoreName, model, teamColor)
 
 	if not teamColor or not model then
 		warn("[CoreService] CreateCore: missing TeamColor or Model")

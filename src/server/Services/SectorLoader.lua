@@ -133,6 +133,7 @@ function SectorLoader.Load(sectorName)
 		Material = Enum.Material.Plastic,
 		CanCollide = true,
 	})
+	CollectionService:AddTag(floor, "Floor")
 
 	-- 6. Build result mapping
 	local result = {
@@ -141,6 +142,7 @@ function SectorLoader.Load(sectorName)
 		TileMap = {},
 		Cores = {},
 		SpawnPoints = {},
+		StartingResources = data.StartingResources or {},
 	}
 
 	-- 7. Place ore tiles
@@ -253,13 +255,21 @@ function SectorLoader.Load(sectorName)
 			Material = Enum.Material.SmoothPlastic,
 			CanCollide = true,
 		})
+
+		local model = Instance.new("Model")
+		model.Name = "CoreModel_" .. (coreData.TeamColor or "Unknown")
+		part.Parent = model
+		model.PrimaryPart = part
+		model.Parent = coresFolder
+
 		table.insert(result.Cores, {
 			TeamColor = coreData.TeamColor,
 			X = x,
 			Z = z,
 			W = w,
 			H = h,
-			Part = part,
+			Model = model,
+			CoreName = "Core Shard",
 		})
 	end
 

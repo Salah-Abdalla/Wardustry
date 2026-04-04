@@ -3,6 +3,7 @@ local Categories = {}
 Categories = {
 	Core = "Core",
 	Drill = "Drill",
+	Transport = "Transport",
 	Factory = "Factory",
 	Storage = "Storage",
 	["Power Generator"] = "Power Generator",
@@ -19,20 +20,21 @@ Categories = {
 
 -- Build menu display order per category
 Categories.Order = {
-	[Categories.Core]               = 1,
-	[Categories.Drill]              = 2,
-	[Categories.Factory]            = 3,
-	[Categories.Storage]            = 4,
-	[Categories["Power Generator"]] = 5,
-	[Categories.Battery]            = 6,
-	[Categories["Power Node"]]      = 7,
-	[Categories["Extra Module"]]    = 8,
-	[Categories["Unit Factory"]]    = 9,
-	[Categories.Unit]               = 10,
-	[Categories.Turret]             = 11,
-	[Categories.Wall]               = 12,
-	[Categories["Building Mender"]] = 13,
-	[Categories["Unit Mender"]]     = 14,
+	[Categories.Core] = 1,
+	[Categories.Transport] = 2,
+	[Categories.Drill] = 3,
+	[Categories.Factory] = 4,
+	[Categories.Storage] = 5,
+	[Categories["Power Generator"]] = 6,
+	[Categories.Battery] = 7,
+	[Categories["Power Node"]] = 8,
+	[Categories["Extra Module"]] = 9,
+	[Categories["Unit Factory"]] = 10,
+	[Categories.Unit] = 11,
+	[Categories.Turret] = 12,
+	[Categories.Wall] = 13,
+	[Categories["Building Mender"]] = 14,
+	[Categories["Unit Mender"]] = 15,
 }
 
 return Categories
