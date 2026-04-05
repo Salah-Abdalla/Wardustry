@@ -50,17 +50,33 @@ local function SpawnModel(buildingName, worldPos, rotationY)
 		-- fallback: plain basepart sized from config
 		local configSize = BuildingConfig.GetSize(buildingName)
 		local sizeX = (configSize and configSize.X or 1) * TILE_SIZE
-		local sizeZ = (configSize and configSize.Z or 1) * TILE_SIZE
+		local sizeZ = (configSize and configSize.Y or 1) * TILE_SIZE
 		local sizeY = TILE_SIZE -- default height
 
 		local part = Instance.new("Part")
 		part.Name = buildingName
 		part.Size = Vector3.new(sizeX, sizeY, sizeZ)
 		part.Position = Vector3.new(worldPos.X, FLOOR_Y + sizeY / 2, worldPos.Z)
+
 		part.Anchored = true
 		part.Color = Color3.fromHex("888888")
 		part.Material = Enum.Material.SmoothPlastic
 		part.Parent = workspace
+
+		local SurfaceGui = Instance.new("SurfaceGui", part)
+		SurfaceGui.Face = Enum.NormalId.Top
+
+		local TextLabel = Instance.new("TextLabel", SurfaceGui)
+		TextLabel.Size = UDim2.fromScale(1, 1)
+		TextLabel.BackgroundTransparency = 1
+		TextLabel.Text = buildingName
+		TextLabel.TextColor3 = Color3.fromHex("FFFFFF")
+		TextLabel.TextScaled = true
+
+		local UiStroke = Instance.new("UIStroke", TextLabel)
+		UiStroke.Color = Color3.fromHex("000000")
+		UiStroke.StrokeSizingMode = Enum.StrokeSizingMode.ScaledSize
+		UiStroke.Thickness = 0.05
 
 		-- wrap in a model so StructureService always gets a Model
 		local model = Instance.new("Model")
@@ -68,6 +84,12 @@ local function SpawnModel(buildingName, worldPos, rotationY)
 		model.PrimaryPart = part
 		part.Parent = model
 		model.Parent = workspace
+
+		-- rotate the model, not the part directly
+		model:PivotTo(
+			CFrame.new(worldPos.X, FLOOR_Y + sizeY / 2, worldPos.Z) * CFrame.Angles(0, math.rad(rotationY or 0), 0)
+		)
+
 		return model
 	end
 end
@@ -94,7 +116,7 @@ local function Validate(player, buildingName, gridOrigin, sizeX, sizeZ)
 		print("[BuildingService] Resources:", ResourceService:GetAll(team))
 
 		if not ResourceService:CanAfford(team, cost) then
-			return false, "Insufficient resources."
+			--return false, "Insufficient resources."
 		end
 	end
 
@@ -115,7 +137,7 @@ function BuildingService:PlaceBuilding(player, request)
 	-- get size from config
 	local configSize = BuildingConfig.GetSize(buildingName)
 	local sizeX = configSize and configSize.X or 1
-	local sizeZ = configSize and configSize.Z or 1
+	local sizeZ = configSize and configSize.Y or 1
 
 	-- snap world position and find grid origin
 	local snapped = GridService:GetSnappedWorldPos(worldPos, sizeX, sizeZ)

@@ -35,6 +35,7 @@ local function TileData(tile)
 		IsObstruction = tile.IsObstruction,
 		ObstructionHeight = tile.ObstructionHeight,
 		SpecialTile = tile.SpecialTile,
+		LiquidTile = tile.LiquidTile,
 	}
 end
 
@@ -98,7 +99,7 @@ function GridService:LoadFromSector(sectorName)
 
 	for key, liquidKind in pairs(sectorResult.LiquidTiles or {}) do
 		local x, z = key:match("^(-?%d+),(-?%d+)$")
-		self:SetSpecialTile(tonumber(x), tonumber(z), liquidKind)
+		self:SetLiquidTile(tonumber(x), tonumber(z), liquidKind)
 	end
 
 	for _, core in ipairs(sectorResult.Cores or {}) do
@@ -165,38 +166,37 @@ end
 
 function GridService:WorldToGrid(worldPos)
 	return {
-		X = math.round(worldPos.X / TILE_SIZE),
-		Z = math.round(worldPos.Z / TILE_SIZE),
+		X = math.floor(worldPos.X / TILE_SIZE),
+		Z = math.floor(worldPos.Z / TILE_SIZE),
 	}
 end
 
 function GridService:GridToWorld(gridX, gridZ)
-	return Vector3.new(gridX * TILE_SIZE, 0, gridZ * TILE_SIZE)
+	return Vector3.new(gridX * TILE_SIZE + TILE_SIZE / 2, 0, gridZ * TILE_SIZE + TILE_SIZE / 2)
 end
 
 function GridService:GetSnappedWorldPos(worldPos, sizeX, sizeZ)
-	local gridX = math.round(worldPos.X / TILE_SIZE)
-	local gridZ = math.round(worldPos.Z / TILE_SIZE)
+	local tileX = math.floor(worldPos.X / TILE_SIZE)
+	local tileZ = math.floor(worldPos.Z / TILE_SIZE)
 
-	local snappedX = gridX * TILE_SIZE
-	local snappedZ = gridZ * TILE_SIZE
+	-- top-left origin of the footprint
+	local originX = tileX - math.floor(sizeX / 2)
+	local originZ = tileZ - math.floor(sizeZ / 2)
 
-	if sizeX % 2 == 0 then
-		snappedX = snappedX + TILE_SIZE / 2
-	end
-	if sizeZ % 2 == 0 then
-		snappedZ = snappedZ + TILE_SIZE / 2
-	end
+	-- world center using SectorLoader formula
+	local centerX = originX * TILE_SIZE + (sizeX * TILE_SIZE) / 2
+	local centerZ = originZ * TILE_SIZE + (sizeZ * TILE_SIZE) / 2
 
-	return Vector3.new(snappedX, 0, snappedZ)
+	return Vector3.new(centerX, 0, centerZ)
 end
 
 function GridService:GetGridOrigin(snappedWorldPos, sizeX, sizeZ)
-	local originX = snappedWorldPos.X - (sizeX * TILE_SIZE) / 2
-	local originZ = snappedWorldPos.Z - (sizeZ * TILE_SIZE) / 2
+	-- reverse of GetSnappedWorldPos
+	local originX = (snappedWorldPos.X - (sizeX * TILE_SIZE) / 2) / TILE_SIZE
+	local originZ = (snappedWorldPos.Z - (sizeZ * TILE_SIZE) / 2) / TILE_SIZE
 	return {
-		X = math.round(originX / TILE_SIZE),
-		Z = math.round(originZ / TILE_SIZE),
+		X = math.round(originX),
+		Z = math.round(originZ),
 	}
 end
 
@@ -361,6 +361,22 @@ function GridService:ClearSpecialTile(x, z)
 	local tile = self:GetTile(x, z)
 	if tile then
 		tile.SpecialTile = nil
+		FireTileUpdate(x, z, tile)
+	end
+end
+
+function GridService:SetLiquidTile(x, z, kind)
+	local tile = EnsureTile(self, x, z)
+	if tile then
+		tile.LiquidTile = kind
+		FireTileUpdate(x, z, tile)
+	end
+end
+
+function GridService:ClearLiquidTile(x, z)
+	local tile = self:GetTile(x, z)
+	if tile then
+		tile.LiquidTile = nil
 		FireTileUpdate(x, z, tile)
 	end
 end

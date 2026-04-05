@@ -28,6 +28,7 @@ local BuildingScrollingFrame = BuildingHolder.ScrollingFrame
 local BuildingSettings = GameGui.BuildingSettings
 local ConfirmButton = BuildingSettings.ConfirmButton
 local CancelButton = BuildingSettings.CancelButton
+local RotateButton = BuildingSettings.RotateButton
 
 local FLOOR_Y = 0.5
 local TILE_SIZE = 4
@@ -64,10 +65,36 @@ local _staged = {}
 --  GHOST HELPERS
 -- ════════════════════════════════════════
 
+-- Adds a direction arrow to the top face of a ghost part
+-- Arrow points toward the "output" side (positive Z of the part, before rotation)
+local function AddDirectionArrow(part)
+	local sg = Instance.new("SurfaceGui")
+	sg.Name = "DirectionArrow"
+	sg.Face = Enum.NormalId.Top
+	sg.SizingMode = Enum.SurfaceGuiSizingMode.PixelsPerStud
+	sg.PixelsPerStud = 20
+	sg.AlwaysOnTop = false
+	sg.Parent = part
+
+	local label = Instance.new("TextLabel")
+	label.Size = UDim2.fromScale(1, 1)
+	label.BackgroundTransparency = 1
+	label.Text = "▲"
+	label.TextColor3 = Color3.fromHex("FFFFFF")
+	label.TextScaled = true
+	label.Font = Enum.Font.GothamBold
+	label.Parent = sg
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = Color3.fromHex("000000")
+	stroke.Thickness = 2
+	stroke.Parent = label
+end
+
 local function MakeGhostPart(buildingName, color)
 	local configSize = BuildingConfig.GetSize(buildingName)
 	local sizeX = (configSize and configSize.X or 1) * TILE_SIZE
-	local sizeZ = (configSize and configSize.Z or 1) * TILE_SIZE
+	local sizeZ = (configSize and configSize.Y or 1) * TILE_SIZE
 	local sizeY = TILE_SIZE
 
 	local part = Instance.new("Part")
@@ -80,6 +107,12 @@ local function MakeGhostPart(buildingName, color)
 	part.Transparency = GHOST_TRANSPARENCY
 	part.Material = Enum.Material.SmoothPlastic
 	part.Parent = workspace
+
+	-- only add arrow if the building can rotate (conveyors, factories, etc.)
+	if BuildingConfig.CanRotate(buildingName) then
+		AddDirectionArrow(part)
+	end
+
 	return part
 end
 
@@ -199,7 +232,7 @@ local function StartPlacementLoop()
 		local configSize = BuildingConfig.GetSize(_selectedBuilding)
 		local modelSize = {
 			X = configSize and configSize.X or 1,
-			Z = configSize and configSize.Z or 1,
+			Z = configSize and configSize.Y or 1,
 		}
 
 		local snapped = GridClient.GetPlacementPosition(hitPos, modelSize)
@@ -209,6 +242,23 @@ local function StartPlacementLoop()
 		_ghostPart.Transparency = GHOST_TRANSPARENCY
 
 		_placementValid = GridClient.IsValidPosition(hitPos, modelSize)
+
+		-- also invalid if overlapping a staged ghost
+		if _placementValid then
+			local ghostCF = CFrame.new(snapped.X, posY, snapped.Z)
+			local ghostSize = _ghostPart.Size
+			for _, entry in ipairs(_staged) do
+				local entryCF = entry.GhostPart.CFrame
+				local entrySize = entry.GhostPart.Size
+				local dx = math.abs(ghostCF.X - entryCF.X)
+				local dz = math.abs(ghostCF.Z - entryCF.Z)
+				if dx < (ghostSize.X + entrySize.X) / 2 and dz < (ghostSize.Z + entrySize.Z) / 2 then
+					_placementValid = false
+					break
+				end
+			end
+		end
+
 		_ghostPart.Color = _placementValid and VALID_COLOR or INVALID_COLOR
 	end)
 end
@@ -218,6 +268,22 @@ local function StopPlacementLoop()
 		_placementConn:Disconnect()
 		_placementConn = nil
 	end
+end
+
+-- ════════════════════════════════════════
+--  ROTATION HELPER
+-- ════════════════════════════════════════
+
+local function Rotate()
+	if not _selectedBuilding then
+		return
+	end
+	if not BuildingConfig.CanRotate(_selectedBuilding) then
+		return
+	end
+	_currentRotation = (_currentRotation + 90) % 360
+	-- RotateButton shows a circular arrow icon — no directional meaning needed
+	-- direction is communicated by the arrow on the ghost in the world
 end
 
 -- ════════════════════════════════════════
@@ -259,7 +325,7 @@ local function ConfirmPlacement()
 		local configSize = BuildingConfig.GetSize(entry.BuildingName)
 		local modelSize = {
 			X = configSize and configSize.X or 1,
-			Z = configSize and configSize.Z or 1,
+			Z = configSize and configSize.Y or 1,
 		}
 		if GridClient.IsValidPosition(entry.WorldPosition, modelSize) then
 			table.insert(requests, {
@@ -282,7 +348,6 @@ end
 -- ════════════════════════════════════════
 
 local function OnMouseClick()
-	-- check if a staged ghost was clicked — remove it
 	local stagedHit = RaycastStagedGhosts()
 	if stagedHit then
 		local entry = GetStagedAtPart(stagedHit.Instance)
@@ -292,7 +357,6 @@ local function OnMouseClick()
 		end
 	end
 
-	-- otherwise stage the current active placement
 	if _selectedBuilding and _placementValid then
 		StageCurrentPlacement()
 	end
@@ -339,7 +403,6 @@ local function loadBuildingHolder(category)
 		end)
 	end
 
-	-- auto-resize canvas
 	local layout = BuildingScrollingFrame:FindFirstChildWhichIsA("UIListLayout")
 		or BuildingScrollingFrame:FindFirstChildWhichIsA("UIGridLayout")
 	if layout then
@@ -378,9 +441,7 @@ local function SetupInput()
 		end
 
 		if input.KeyCode == Enum.KeyCode.R and _selectedBuilding then
-			if BuildingConfig.CanRotate(_selectedBuilding) then
-				_currentRotation = (_currentRotation + 90) % 360
-			end
+			Rotate()
 		end
 
 		if input.KeyCode == Enum.KeyCode.Escape and _selectedBuilding then
@@ -402,6 +463,7 @@ function BuildingController:KnitStart()
 
 	ConfirmButton.Activated:Connect(ConfirmPlacement)
 	CancelButton.Activated:Connect(ExitPlacementMode)
+	RotateButton.Activated:Connect(Rotate)
 
 	BuildingSettings.Visible = false
 

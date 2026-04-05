@@ -52,38 +52,37 @@ end
 
 function GridClient.WorldToGrid(worldPos)
 	return {
-		X = math.round(worldPos.X / TILE_SIZE),
-		Z = math.round(worldPos.Z / TILE_SIZE),
+		X = math.floor(worldPos.X / TILE_SIZE),
+		Z = math.floor(worldPos.Z / TILE_SIZE),
 	}
 end
 
 function GridClient.GridToWorld(gridX, gridZ)
-	return Vector3.new(gridX * TILE_SIZE, 0, gridZ * TILE_SIZE)
+	return Vector3.new(gridX * TILE_SIZE + TILE_SIZE / 2, 0, gridZ * TILE_SIZE + TILE_SIZE / 2)
 end
 
 function GridClient.GetSnappedWorldPos(worldPos, sizeX, sizeZ)
-	local gridX = math.round(worldPos.X / TILE_SIZE)
-	local gridZ = math.round(worldPos.Z / TILE_SIZE)
+	local tileX = math.floor(worldPos.X / TILE_SIZE)
+	local tileZ = math.floor(worldPos.Z / TILE_SIZE)
 
-	local snappedX = gridX * TILE_SIZE
-	local snappedZ = gridZ * TILE_SIZE
+	-- top-left origin of the footprint
+	local originX = tileX - math.floor(sizeX / 2)
+	local originZ = tileZ - math.floor(sizeZ / 2)
 
-	if sizeX % 2 == 0 then
-		snappedX = snappedX + TILE_SIZE / 2
-	end
-	if sizeZ % 2 == 0 then
-		snappedZ = snappedZ + TILE_SIZE / 2
-	end
+	-- world center using SectorLoader formula
+	local centerX = originX * TILE_SIZE + (sizeX * TILE_SIZE) / 2
+	local centerZ = originZ * TILE_SIZE + (sizeZ * TILE_SIZE) / 2
 
-	return Vector3.new(snappedX, 0, snappedZ)
+	return Vector3.new(centerX, 0, centerZ)
 end
 
 function GridClient.GetGridOrigin(snappedWorldPos, sizeX, sizeZ)
-	local originX = snappedWorldPos.X - (sizeX * TILE_SIZE) / 2
-	local originZ = snappedWorldPos.Z - (sizeZ * TILE_SIZE) / 2
+	-- reverse of GetSnappedWorldPos
+	local originX = (snappedWorldPos.X - (sizeX * TILE_SIZE) / 2) / TILE_SIZE
+	local originZ = (snappedWorldPos.Z - (sizeZ * TILE_SIZE) / 2) / TILE_SIZE
 	return {
-		X = math.round(originX / TILE_SIZE),
-		Z = math.round(originZ / TILE_SIZE),
+		X = math.round(originX),
+		Z = math.round(originZ),
 	}
 end
 
@@ -151,6 +150,14 @@ function GridClient.GetSpecialTile(x, z)
 		return nil
 	end
 	return tile.SpecialTile
+end
+
+function GridClient.GetLiquidTile(x, z)
+	local tile = GridClient.GetTile(x, z)
+	if not tile then
+		return nil
+	end
+	return tile.LiquidTile
 end
 
 -- ============================================================
