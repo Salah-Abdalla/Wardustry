@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(rojo --version)",
-      "Bash(aftman --version)"
+      "Bash(aftman --version)",
+      "Bash(wc -l /c/Users/salah/Documents/Wardustry/src/server/Services/*.lua)",
+      "Bash(wc -l /c/Users/salah/Documents/Wardustry/src/shared/Config/*.lua)"
     ]
   }
 }

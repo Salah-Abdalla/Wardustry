@@ -22,6 +22,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 1000,
 	},
 	[ObjectNames["Core Bastion"]] = {
 		HP = 2400,
@@ -42,6 +43,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 2000,
 	},
 	[ObjectNames["Core Citadel"]] = {
 		HP = 5500,
@@ -63,6 +65,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 4000,
 	},
 
 	-- ============
@@ -86,6 +89,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 10,
 	},
 	[ObjectNames["Pneumatic Drill"]] = {
 		HP = 130,
@@ -106,6 +110,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 15,
 	},
 	[ObjectNames["Laser Drill"]] = {
 		HP = 210,
@@ -126,6 +131,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Mega Drill"]] = {
 		HP = 300,
@@ -147,6 +153,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Liquid Extractor"]] = {
 		HP = 110,
@@ -167,6 +174,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 10,
 	},
 
 	-- ============
@@ -190,6 +198,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Ironstone Forge"]] = {
 		HP = 90,
@@ -210,6 +219,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Sand Kiln"]] = {
 		HP = 80,
@@ -229,6 +239,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Bauxite Refinery"]] = {
 		HP = 95,
@@ -248,6 +259,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Graphite Press"]] = {
 		HP = 80,
@@ -267,6 +279,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Silicon Smelter"]] = {
 		HP = 90,
@@ -287,6 +300,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Quartz Press"]] = {
 		HP = 140,
@@ -307,6 +321,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Steel Manufactuary"]] = {
 		HP = 180,
@@ -327,6 +342,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Crude Vat"]] = {
 		HP = 90,
@@ -347,6 +363,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Uranium Refinery"]] = {
 		HP = 160,
@@ -367,6 +384,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Coolant Mixer"]] = {
 		HP = 100,
@@ -387,6 +405,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 
 	-- ============
@@ -932,6 +951,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Flak Turret"]] = {
 		HP = 185,
@@ -952,6 +972,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Howitzer"]] = {
 		HP = 320,
@@ -972,6 +993,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Railgun"]] = {
 		HP = 300,
@@ -992,6 +1014,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Flamethrower"]] = {
 		HP = 200,
@@ -1011,6 +1034,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Tesla Tower"]] = {
 		HP = 280,
@@ -1031,6 +1055,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Mortar"]] = {
 		HP = 300,
@@ -1051,6 +1076,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Sniper"]] = {
 		HP = 250,
@@ -1071,6 +1097,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 	[ObjectNames["Laser Cannon"]] = {
 		HP = 400,
@@ -1091,6 +1118,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 30,
 	},
 
 	-- ============
@@ -1195,6 +1223,7 @@ local BuildingConfig = {
 		OutputsUnit = true,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Tank Factory Advanced"]] = {
 		HP = 520,
@@ -1216,6 +1245,7 @@ local BuildingConfig = {
 		OutputsUnit = true,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Drone Factory Basic"]] = {
 		HP = 260,
@@ -1236,6 +1266,7 @@ local BuildingConfig = {
 		OutputsUnit = true,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Drone Factory Advanced"]] = {
 		HP = 380,
@@ -1257,6 +1288,7 @@ local BuildingConfig = {
 		OutputsUnit = true,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Support Factory Basic"]] = {
 		HP = 220,
@@ -1277,6 +1309,7 @@ local BuildingConfig = {
 		OutputsUnit = true,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 	[ObjectNames["Support Factory Advanced"]] = {
 		HP = 340,
@@ -1298,6 +1331,7 @@ local BuildingConfig = {
 		OutputsUnit = true,
 		CanRotate = true,
 		Armor = 0,
+		ItemCapacity = 20,
 	},
 
 	-- ============
@@ -1322,6 +1356,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 300,
 	},
 	[ObjectNames["Crate"]] = {
 		HP = 180,
@@ -1341,6 +1376,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 150,
 	},
 	[ObjectNames["Liquid Tank"]] = {
 		HP = 200,
@@ -1360,6 +1396,7 @@ local BuildingConfig = {
 		OutputsUnit = false,
 		CanRotate = false,
 		Armor = 0,
+		ItemCapacity = 300,
 	},
 
 	-- ============
@@ -1526,6 +1563,11 @@ function BuildingConfig.GetByCategory(category)
 		end
 	end
 	return results
+end
+
+function BuildingConfig.GetItemCapacity(buildingId)
+	local config = BuildingConfig.Get(buildingId)
+	return config and config.ItemCapacity or 0
 end
 
 function BuildingConfig.CanAfford(buildingId, resourceBank)

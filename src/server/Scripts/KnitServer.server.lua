@@ -10,6 +10,8 @@ require(ServicesFolder.StructureService)
 require(ServicesFolder.TeamService)
 require(ServicesFolder.CoreService)
 require(ServicesFolder.BuildingService)
+require(ServicesFolder.ConveyorService)
+require(ServicesFolder.DrillService)
 require(ServicesFolder.CampaignService)
 
 Knit.Start():catch(warn)

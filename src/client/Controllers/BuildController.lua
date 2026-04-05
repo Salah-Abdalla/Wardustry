@@ -11,6 +11,8 @@ local CollectionService = game:GetService("CollectionService")
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local BuildingConfig = require(ReplicatedStorage.Config.BuildingConfig)
 local ResourceConfig = require(ReplicatedStorage.Config.ResourceConfig)
+local DrillConfig = require(ReplicatedStorage.Config.DrillConfig)
+local Categories = require(ReplicatedStorage.Dictionaries.Categories)
 local GridClient = require(ReplicatedStorage.Modules.GridClient)
 
 local LocalPlayer = Players.LocalPlayer
@@ -176,6 +178,21 @@ end
 --  RAYCAST
 -- ════════════════════════════════════════
 
+local function FootprintHasMinableOre(buildingName, hitPos, modelSize)
+	local snapped = GridClient.GetPlacementPosition(hitPos, modelSize)
+	local gridOrigin = GridClient.GetGridOrigin(snapped, modelSize.X, modelSize.Z)
+
+	for tx = gridOrigin.X, gridOrigin.X + modelSize.X - 1 do
+		for tz = gridOrigin.Z, gridOrigin.Z + modelSize.Z - 1 do
+			local oreId = GridClient.GetOre(tx, tz)
+			if oreId and DrillConfig.CanMineOre(buildingName, oreId) then
+				return true
+			end
+		end
+	end
+	return false
+end
+
 local function RaycastFloor()
 	local mousePos = UserInputService:GetMouseLocation()
 	local ray = Camera:ViewportPointToRay(mousePos.X, mousePos.Y)
@@ -242,6 +259,10 @@ local function StartPlacementLoop()
 		_ghostPart.Transparency = GHOST_TRANSPARENCY
 
 		_placementValid = GridClient.IsValidPosition(hitPos, modelSize)
+
+		if _placementValid and BuildingConfig.GetCategory(_selectedBuilding) == Categories.Drill then
+			_placementValid = FootprintHasMinableOre(_selectedBuilding, hitPos, modelSize)
+		end
 
 		-- also invalid if overlapping a staged ghost
 		if _placementValid then
@@ -444,7 +465,7 @@ local function SetupInput()
 			Rotate()
 		end
 
-		if input.KeyCode == Enum.KeyCode.Escape and _selectedBuilding then
+		if input.KeyCode == Enum.KeyCode.E and _selectedBuilding then
 			ExitPlacementMode()
 		end
 	end)

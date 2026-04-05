@@ -103,9 +103,15 @@ function GridClient.IsInBounds(x, z)
 end
 
 function GridClient.GetTile(x, z)
+	--print("Getting Tile", x, z, "In Bounds: ", InBounds(x, z), "GridX?: ", _grid[x])
+
 	if not InBounds(x, z) then
 		return nil
 	end
+
+	x = tostring(x)
+	z = tostring(z)
+
 	if not _grid[x] then
 		return nil
 	end
@@ -158,6 +164,10 @@ function GridClient.GetLiquidTile(x, z)
 		return nil
 	end
 	return tile.LiquidTile
+end
+
+function GridClient.GetFullGrid()
+	return _grid
 end
 
 -- ============================================================

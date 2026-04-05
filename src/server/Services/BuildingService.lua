@@ -7,6 +7,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Teams = game:GetService("Teams")
 
 local BuildingConfig = require(ReplicatedStorage.Config.BuildingConfig)
+local DrillConfig    = require(ReplicatedStorage.Config.DrillConfig)
+local Categories     = require(ReplicatedStorage.Dictionaries.Categories)
 
 local FLOOR_Y = 0.5 -- top of the sector floor part
 local TILE_SIZE = 4
@@ -17,6 +19,10 @@ local BuildingService = Knit.CreateService({
 		PlacementResult = Knit.CreateSignal(), -- (success: bool, message: string) fires to placing player
 	},
 })
+
+-- Server-side signals for other services to listen to
+BuildingService.BuildingPlaced    = Instance.new("BindableEvent") -- (model, buildingName, team, gridX, gridZ, sizeX, sizeZ, rotationY)
+BuildingService.BuildingDemolished = Instance.new("BindableEvent") -- (buildingName, team, gridX, gridZ, sizeX, sizeZ)
 
 -- tracks placed buildings: model → { BuildingName, Team, GridX, GridZ, SizeX, SizeZ }
 local _placed = {}
@@ -108,6 +114,23 @@ local function Validate(player, buildingName, gridOrigin, sizeX, sizeZ)
 		return false, "Cannot place here — space is occupied or out of bounds."
 	end
 
+	if BuildingConfig.GetCategory(buildingName) == Categories.Drill then
+		local hasOre = false
+		for tx = gridOrigin.X, gridOrigin.X + sizeX - 1 do
+			for tz = gridOrigin.Z, gridOrigin.Z + sizeZ - 1 do
+				local oreId = GridService:GetOre(tx, tz)
+				if oreId and DrillConfig.CanMineOre(buildingName, oreId) then
+					hasOre = true
+					break
+				end
+			end
+			if hasOre then break end
+		end
+		if not hasOre then
+			return false, "No minable ore under this drill."
+		end
+	end
+
 	local cost = BuildingConfig.GetCost(buildingName)
 	if cost then
 		-- debug: print what the team has vs what is needed
@@ -175,7 +198,10 @@ function BuildingService:PlaceBuilding(player, request)
 		GridZ = gridOrigin.Z,
 		SizeX = sizeX,
 		SizeZ = sizeZ,
+		RotationY = rotationY,
 	}
+
+	BuildingService.BuildingPlaced:Fire(model, buildingName, team, gridOrigin.X, gridOrigin.Z, sizeX, sizeZ, rotationY)
 
 	-- notify placing player
 	BuildingService.Client.PlacementResult:Fire(player, true, "Placed " .. buildingName)
@@ -208,6 +234,8 @@ function BuildingService:DemolishBuilding(model)
 
 	-- remove from tracking
 	_placed[model] = nil
+
+	BuildingService.BuildingDemolished:Fire(data.BuildingName, data.Team, data.GridX, data.GridZ, data.SizeX, data.SizeZ)
 
 	-- destroy model
 	if model and model.Parent then
