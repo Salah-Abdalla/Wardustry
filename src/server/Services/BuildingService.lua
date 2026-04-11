@@ -7,8 +7,8 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Teams = game:GetService("Teams")
 
 local BuildingConfig = require(ReplicatedStorage.Config.BuildingConfig)
-local DrillConfig    = require(ReplicatedStorage.Config.DrillConfig)
-local Categories     = require(ReplicatedStorage.Dictionaries.Categories)
+local DrillConfig = require(ReplicatedStorage.Config.DrillConfig)
+local Categories = require(ReplicatedStorage.Dictionaries.Categories)
 
 local FLOOR_Y = 0.5 -- top of the sector floor part
 local TILE_SIZE = 4
@@ -21,7 +21,7 @@ local BuildingService = Knit.CreateService({
 })
 
 -- Server-side signals for other services to listen to
-BuildingService.BuildingPlaced    = Instance.new("BindableEvent") -- (model, buildingName, team, gridX, gridZ, sizeX, sizeZ, rotationY)
+BuildingService.BuildingPlaced = Instance.new("BindableEvent") -- (model, buildingName, team, gridX, gridZ, sizeX, sizeZ, rotationY)
 BuildingService.BuildingDemolished = Instance.new("BindableEvent") -- (buildingName, team, gridX, gridZ, sizeX, sizeZ)
 
 -- tracks placed buildings: model → { BuildingName, Team, GridX, GridZ, SizeX, SizeZ }
@@ -110,6 +110,14 @@ local function Validate(player, buildingName, gridOrigin, sizeX, sizeZ)
 		return false, "You are not on a team."
 	end
 
+	for tx = gridOrigin.X, gridOrigin.X + sizeX - 1 do
+		for tz = gridOrigin.Z, gridOrigin.Z + sizeZ - 1 do
+			if GridService:GetLiquidTile(tx, tz) then
+				return false, "Cannot build on liquid tiles."
+			end
+		end
+	end
+
 	if not GridService:CanPlace(gridOrigin.X, gridOrigin.Z, sizeX, sizeZ) then
 		return false, "Cannot place here — space is occupied or out of bounds."
 	end
@@ -124,7 +132,9 @@ local function Validate(player, buildingName, gridOrigin, sizeX, sizeZ)
 					break
 				end
 			end
-			if hasOre then break end
+			if hasOre then
+				break
+			end
 		end
 		if not hasOre then
 			return false, "No minable ore under this drill."
@@ -184,11 +194,11 @@ function BuildingService:PlaceBuilding(player, request)
 	-- spawn model
 	local model = SpawnModel(buildingName, snapped, rotationY)
 
-	-- mark grid tiles as occupied
-	GridService:SetBuilding(gridOrigin.X, gridOrigin.Z, sizeX, sizeZ, buildingName)
-
 	-- register with StructureService
-	StructureService:Register(model, buildingName, team)
+	local StructObj = StructureService:Register(model, buildingName, team)
+
+	-- mark grid tiles as occupied
+	GridService:SetBuilding(gridOrigin.X, gridOrigin.Z, sizeX, sizeZ, StructObj)
 
 	-- track internally
 	_placed[model] = {
@@ -235,7 +245,14 @@ function BuildingService:DemolishBuilding(model)
 	-- remove from tracking
 	_placed[model] = nil
 
-	BuildingService.BuildingDemolished:Fire(data.BuildingName, data.Team, data.GridX, data.GridZ, data.SizeX, data.SizeZ)
+	BuildingService.BuildingDemolished:Fire(
+		data.BuildingName,
+		data.Team,
+		data.GridX,
+		data.GridZ,
+		data.SizeX,
+		data.SizeZ
+	)
 
 	-- destroy model
 	if model and model.Parent then

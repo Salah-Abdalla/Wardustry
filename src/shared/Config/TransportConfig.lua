@@ -7,10 +7,10 @@ local TransportConfig = {
 	-- CONVEYORS
 	-- ============
 	[ObjectNames["Conveyor"]] = {
-		Speed = 5,
+		Speed = 2.5,
 	},
 	[ObjectNames["Express Conveyor"]] = {
-		Speed = 10,
+		Speed = 5,
 	},
 	[ObjectNames["Reinforced Conveyor"]] = {
 		Speed = 10,

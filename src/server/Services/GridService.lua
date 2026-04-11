@@ -137,6 +137,7 @@ local function EnsureTile(self, x, z)
 			IsObstruction = false,
 			ObstructionHeight = 0,
 			SpecialTile = nil,
+			LiquidTile = nil, -- add this
 		}
 	end
 	return Grid[x][z]
@@ -261,6 +262,14 @@ function GridService:GetSpecialTile(x, z)
 		return nil
 	end
 	return tile.SpecialTile
+end
+
+function GridService:GetLiquidTile(x, z)
+	local tile = self:GetTile(x, z)
+	if not tile then
+		return nil
+	end
+	return tile.LiquidTile
 end
 
 function GridService:CanPlace(gridX, gridZ, sizeX, sizeZ)

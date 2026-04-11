@@ -163,6 +163,8 @@ local function StageCurrentPlacement()
 	local pos = _ghostPart.CFrame.Position
 	local rot = _currentRotation
 
+	print("[BuildingController] Staged", _selectedBuilding, "rot=", rot)
+
 	local stagedGhost = MakeGhostPart(_selectedBuilding, STAGED_COLOR)
 	stagedGhost.CFrame = CFrame.new(pos) * CFrame.Angles(0, math.rad(rot), 0)
 
@@ -186,6 +188,19 @@ local function FootprintHasMinableOre(buildingName, hitPos, modelSize)
 		for tz = gridOrigin.Z, gridOrigin.Z + modelSize.Z - 1 do
 			local oreId = GridClient.GetOre(tx, tz)
 			if oreId and DrillConfig.CanMineOre(buildingName, oreId) then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+local function FootprintHasLiquid(hitPos, modelSize)
+	local snapped = GridClient.GetPlacementPosition(hitPos, modelSize)
+	local gridOrigin = GridClient.GetGridOrigin(snapped, modelSize.X, modelSize.Z)
+	for tx = gridOrigin.X, gridOrigin.X + modelSize.X - 1 do
+		for tz = gridOrigin.Z, gridOrigin.Z + modelSize.Z - 1 do
+			if GridClient.GetLiquidTile(tx, tz) then
 				return true
 			end
 		end
@@ -259,6 +274,10 @@ local function StartPlacementLoop()
 		_ghostPart.Transparency = GHOST_TRANSPARENCY
 
 		_placementValid = GridClient.IsValidPosition(hitPos, modelSize)
+
+		if _placementValid then
+			_placementValid = not FootprintHasLiquid(hitPos, modelSize)
+		end
 
 		if _placementValid and BuildingConfig.GetCategory(_selectedBuilding) == Categories.Drill then
 			_placementValid = FootprintHasMinableOre(_selectedBuilding, hitPos, modelSize)
