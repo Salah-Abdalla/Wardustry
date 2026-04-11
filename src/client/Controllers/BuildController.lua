@@ -7,6 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local CollectionService = game:GetService("CollectionService")
+local StarterPlayer = game:GetService("StarterPlayer")
 
 local Knit = require(ReplicatedStorage.Packages.Knit)
 local BuildingConfig = require(ReplicatedStorage.Config.BuildingConfig)
@@ -414,11 +415,11 @@ local function loadBuildingHolder(category)
 	end
 
 	local BuildingList = BuildingConfig.GetByCategory(category)
-	for i, building in pairs(BuildingList) do
+	for _, building in pairs(BuildingList) do
 		local newFrame = BuildingScrollingFrame.Template:Clone()
 		newFrame.Visible = true
 		newFrame.Name = building
-		newFrame.LayoutOrder = i
+		newFrame.LayoutOrder = BuildingConfig.GetLayoutOrder(building) or 0
 		newFrame.Parent = BuildingScrollingFrame
 
 		newFrame.Icon.Image = BuildingConfig.GetIcon(building) or "rbxassetid://0"
@@ -429,7 +430,7 @@ local function loadBuildingHolder(category)
 			local newCostIcon = costFrame.Template:Clone()
 			newCostIcon.Visible = true
 			newCostIcon.Parent = costFrame
-
+			newCostIcon.LayoutOrder = ResourceConfig.GetLayoutOrder(resource) or 0
 			newCostIcon.Icon.Image = ResourceConfig.GetIconId(resource) or "rbxassetid://0"
 			newCostIcon.Amount.Text = tostring(amount)
 

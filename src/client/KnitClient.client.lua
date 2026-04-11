@@ -4,5 +4,6 @@ local Player = game:GetService("Players").LocalPlayer
 local ControllersFolder = script.Parent.Controllers
 
 require(ControllersFolder.BuildController)
+require(ControllersFolder.ResourceController)
 
 Knit.Start():catch(warn)

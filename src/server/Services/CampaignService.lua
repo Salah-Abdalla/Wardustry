@@ -46,10 +46,18 @@ function CampaignService:LoadCampaign(sectorName)
 		print(coreData)
 		TeamService:CreateTeam(teamColor)
 
-		print(result)
+		print("Core Data: ", coreData)
 
 		ResourceService:InitTeam(teamColor, result.StartingResources and result.StartingResources[teamColor])
-		CoreService:CreateCore(coreData.CoreName, coreData.Model, teamColor)
+		CoreService:CreateCore(
+			coreData.CoreName,
+			coreData.Model,
+			teamColor,
+			coreData.gX,
+			coreData.gZ,
+			coreData.SizeX,
+			coreData.SizeZ
+		)
 	end
 
 	-- assign all current players to the first team

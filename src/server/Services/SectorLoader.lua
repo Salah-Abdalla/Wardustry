@@ -6,6 +6,10 @@ local SectorLoader = {}
 
 local ServerStorage = game:GetService("ServerStorage")
 local CollectionService = game:GetService("CollectionService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local BuildingConfig = require(ReplicatedStorage.Config.BuildingConfig)
+local ObjectNames = require(ReplicatedStorage.Dictionaries.ObjectNames)
 
 -- ── Constants ──
 local TILE_SIZE = 4 -- studs per tile
@@ -239,17 +243,20 @@ function SectorLoader.Load(sectorName)
 
 	-- 12. Place Cores
 	for _, coreData in ipairs(data.Cores or {}) do
-		local x, z = coreData.X, coreData.Z
-		local w = coreData.W or 4 -- default to 2 tiles wide
-		local h = coreData.H or 4 -- default to 2 tiles tall
+		local PositionX, PositionZ = coreData.X, coreData.Z
+
+		local Length = BuildingConfig.GetSize(ObjectNames["Core Shard"]).X
+		local Width = BuildingConfig.GetSize(ObjectNames["Core Shard"]).Y
+
+		local Height = coreData.H or 4 -- default to 2 tiles tall
 
 		-- center position over the full WxH block
-		local centerX = x * TILE_SIZE + (w * TILE_SIZE) / 2
-		local centerZ = z * TILE_SIZE + (h * TILE_SIZE) / 2
+		local centerX = PositionX * TILE_SIZE + (Width * TILE_SIZE) / 2
+		local centerZ = PositionZ * TILE_SIZE + (Length * TILE_SIZE) / 2
 
 		local part = MakePart(coresFolder, {
 			Name = "Core_" .. (coreData.TeamColor or "Unknown"),
-			Size = Vector3.new(w * TILE_SIZE, CORE_SIZE, h * TILE_SIZE),
+			Size = Vector3.new(Width * TILE_SIZE, Height * TILE_SIZE, Length * TILE_SIZE),
 			Position = Vector3.new(centerX, CORE_Y, centerZ),
 			Color = CORE_COLOR,
 			Material = Enum.Material.SmoothPlastic,
@@ -264,10 +271,11 @@ function SectorLoader.Load(sectorName)
 
 		table.insert(result.Cores, {
 			TeamColor = coreData.TeamColor,
-			X = x,
-			Z = z,
-			W = w,
-			H = h,
+			gX = PositionX,
+			gZ = PositionZ,
+			SizeX = Width,
+			SizeZ = Length,
+			H = Height,
 			Model = model,
 			CoreName = "Core Shard",
 		})

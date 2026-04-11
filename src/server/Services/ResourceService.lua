@@ -1,7 +1,11 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerScriptService = game:GetService("ServerScriptService")
 -- ResourceService
 -- Knit Service — source of truth for all team resources
 -- Place in ServerScriptService/Services
 
+local ResourceConfig = require(ReplicatedStorage.Config.ResourceConfig)
+local TeamService = require(ServerScriptService.Services.TeamService)
 local Knit = require(game:GetService("ReplicatedStorage").Packages.Knit)
 
 local ResourceService = Knit.CreateService({
@@ -65,12 +69,23 @@ function ResourceService:InitTeam(team, startingResources)
 			_resources[team][resource] = math.max(0, amount)
 			FireChanged(team, resource, _resources[team][resource])
 		end
+	else
+		for _, resource in pairs(ResourceConfig.GetAllOfKind("Ore")) do
+			_resources[team][resource] = 0
+			FireChanged(team, resource, _resources[team][resource])
+		end
+
+		for _, resource in pairs(ResourceConfig.GetAllOfKind("Processed")) do
+			_resources[team][resource] = 0
+			FireChanged(team, resource, _resources[team][resource])
+		end
 	end
 	print(string.format("[ResourceService] Initialized team '%s'", tostring(team)))
 end
 
 -- Add resources to a team
 function ResourceService:Add(team, resource, amount)
+	print(string.format("[ResourceService] Adding %d %s to team '%s'", amount, resource, tostring(team)))
 	EnsureTeam(team)
 	if not _resources[team][resource] then
 		warn("[ResourceService] Unknown resource: " .. tostring(resource))
@@ -147,7 +162,7 @@ end
 function ResourceService.Client:GetMyResources(player)
 	-- You'll need a way to get a player's team — hook into your team system here
 	-- Placeholder: return empty until team assignment is wired
-	local team = player.Team -- adjust to your team lookup
+	local team = TeamService:GetPlayerTeam(player) -- adjust to your team lookup
 	if not team then
 		return {}
 	end

@@ -1,7 +1,9 @@
+local ServerScriptService = game:GetService("ServerScriptService")
 -- CoreService
 -- Knit Service — manages Core structures, links them to teams, handles destruction
 -- Place in ServerScriptService/Services
 
+local ConveyorService = require(ServerScriptService.Services.ConveyorService)
 local Knit = require(game:GetService("ReplicatedStorage").Packages.Knit)
 
 local CoreService = Knit.CreateService({
@@ -23,7 +25,7 @@ local TeamService
 
 -- Register a Core for a team
 -- coreData = { TeamColor = string, Model = Model }
-function CoreService:CreateCore(CoreName, model, teamColor)
+function CoreService:CreateCore(CoreName, model, teamColor, gx, gz, sizeX, sizeZ)
 	print(CoreName, model, teamColor)
 
 	if not teamColor or not model then
@@ -37,6 +39,8 @@ function CoreService:CreateCore(CoreName, model, teamColor)
 		warn("[CoreService] CreateCore: failed to register structure for team " .. teamColor)
 		return
 	end
+
+	ConveyorService:_RegisterConsumer(model, CoreName, teamColor, gx, gz, sizeX, sizeZ)
 
 	-- Link model to team in TeamService
 	TeamService:SetCoreToTeam(structureObj, teamColor)

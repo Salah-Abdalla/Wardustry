@@ -238,6 +238,10 @@ function TeamService:GetAllTeams()
 	return list
 end
 
+function TeamService.Client:GetPlayerTeam(player)
+	return self:GetPlayerTeam(player)
+end
+
 -- ════════════════════════════════════════
 --  LIFECYCLE
 -- ════════════════════════════════════════
