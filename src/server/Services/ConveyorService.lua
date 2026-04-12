@@ -77,6 +77,9 @@ local SOLID_TRANSPORTS = {
 local _nodes = {}
 local _producers = {}
 local _consumers = {}
+-- Per-model delivery callbacks registered by other services (e.g. FactoryService)
+-- [model] = function(resourceId, amount) -> bool (false = buffer full, keep item on conveyor)
+local _consumerCallbacks = {}
 local _producerEdges = {}
 local _consumerEdges = {}
 local _itemFolder = nil -- Folder in workspace that holds all item parts
@@ -203,6 +206,7 @@ local function ResolveLinks(node)
 end
 
 -- Rebuild cached output-edge list for a producer model after network changes.
+-- Only checks tiles that share an edge with the footprint (no diagonals).
 local function RebuildProducerEdges(model, entry)
 	local edges = {}
 	local gx, gz, sx, sz = entry.GX, entry.GZ, entry.SizeX, entry.SizeZ
@@ -211,16 +215,27 @@ local function RebuildProducerEdges(model, entry)
 		return x >= gx and x < gx + sx and z >= gz and z < gz + sz
 	end
 
-	for tx = gx - 1, gx + sx do
-		for tz = gz - 1, gz + sz do
-			if not inFootprint(tx, tz) then
-				local node = _nodes[NodeKey(tx, tz)]
-				if node then
-					local outX, outZ = GetOutputTile(node.GX, node.GZ, node.Dir)
-					-- valid if output points away from footprint
-					if not inFootprint(outX, outZ) then
-						table.insert(edges, node)
-					end
+	-- Left and right columns, within the Z span of the footprint
+	for tz = gz, gz + sz - 1 do
+		for _, tx in ipairs({ gx - 1, gx + sx }) do
+			local node = _nodes[NodeKey(tx, tz)]
+			if node then
+				local outX, outZ = GetOutputTile(node.GX, node.GZ, node.Dir)
+				if not inFootprint(outX, outZ) then
+					table.insert(edges, node)
+				end
+			end
+		end
+	end
+
+	-- Top and bottom rows, within the X span of the footprint
+	for tx = gx, gx + sx - 1 do
+		for _, tz in ipairs({ gz - 1, gz + sz }) do
+			local node = _nodes[NodeKey(tx, tz)]
+			if node then
+				local outX, outZ = GetOutputTile(node.GX, node.GZ, node.Dir)
+				if not inFootprint(outX, outZ) then
+					table.insert(edges, node)
 				end
 			end
 		end
@@ -447,22 +462,43 @@ function ConveyorService:_TryPush(targetNode, item)
 	return true
 end
 
-function ConveyorService:_OnBuildingReceive(_consumerEntry, _item)
-	-- TODO: notify the building's service (FactoryService, StorageService, etc.)
-	-- so it can add the item to its own internal buffer
+-- Register a delivery callback for a consumer building model.
+-- callback(resourceId, amount) should return true if the item was accepted,
+-- false if the building's input buffer is full (item stays on conveyor).
+function ConveyorService:RegisterConsumerCallback(model, callback)
+	_consumerCallbacks[model] = callback
+end
+
+function ConveyorService:UnregisterConsumerCallback(model)
+	_consumerCallbacks[model] = nil
+end
+
+function ConveyorService:_OnBuildingReceive(consumerEntry, item)
+	local cb = _consumerCallbacks[consumerEntry.Model]
+	if cb then
+		return cb(item.ResourceId, item.Amount)
+	end
+	return false
 end
 
 function ConveyorService:_DeliverToConsumer(consumerEntry, item)
-	if item.Part then
-		item.Part:Destroy()
-		item.Part = nil
-	end
 	if BuildingConfig.GetCategory(consumerEntry.BuildingName) == Categories.Core then
+		if item.Part then
+			item.Part:Destroy()
+			item.Part = nil
+		end
 		self.ResourceService:Add(consumerEntry.Team, item.ResourceId, item.Amount)
+		return true
 	else
-		self:_OnBuildingReceive(consumerEntry, item)
+		local accepted = self:_OnBuildingReceive(consumerEntry, item)
+		if accepted then
+			if item.Part then
+				item.Part:Destroy()
+				item.Part = nil
+			end
+		end
+		return accepted
 	end
-	return true
 end
 
 function ConveyorService:_AdvanceItem(node, item, dt)
@@ -693,9 +729,11 @@ end
 local function OnBuildingPlaced(model, buildingName, team, gx, gz, sizeX, sizeZ, rotY)
 	if SOLID_TRANSPORTS[buildingName] then
 		ConveyorService:_RegisterNode(model, buildingName, team, gx, gz, rotY)
-	elseif BuildingConfig.OutputsResources(buildingName) then
+	end
+	if BuildingConfig.OutputsResources(buildingName) then
 		ConveyorService:_RegisterProducer(model, buildingName, team, gx, gz, sizeX, sizeZ)
-	elseif BuildingConfig.AcceptsResourceInput(buildingName) then
+	end
+	if BuildingConfig.AcceptsResourceInput(buildingName) then
 		ConveyorService:_RegisterConsumer(model, buildingName, team, gx, gz, sizeX, sizeZ)
 	end
 end

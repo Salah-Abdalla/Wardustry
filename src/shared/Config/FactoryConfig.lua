@@ -132,17 +132,7 @@ local FactoryConfig = {
 		PowerNeeded = 1.0,
 	},
 
-	[ObjectNames["Steam Generator"]] = {
-		Inputs = {
-			[ObjectNames.Coal] = { Amount = 2, Capacity = 50 },
-			[ObjectNames.Water] = { Amount = 4, Capacity = 50 },
-		},
-		Output = nil,
-		OutputAmount = 0,
-		OutputCapacity = 0,
-		ProcessingTime = 2.0,
-		PowerNeeded = 0,
-	},
+	-- Steam Generator omitted: it is Categories["Power Generator"], handled by PowerService
 }
 
 -- ============================================================
